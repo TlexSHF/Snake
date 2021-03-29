@@ -23,21 +23,30 @@ public:
 	GraphicsManager();
 	~GraphicsManager();
 
-	std::vector<SDL_Texture*> m_textures;
+	int createTexture(std::string image);
+	void renderTexture(unsigned index, unsigned x, unsigned y);
+	void renderGraphics();
 
-	int updateTexture(std::string image);
-	//void createSprite(SDL_Texture* texture, SDL_Rect& coords, std::string image, int x, int y);
 	void setX(int x);
 	void setY(int y);
 
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
+	std::vector<SDL_Texture*> getTextures();
+
+	//this one going
+	int updateTexture(std::string image);
+	//these are going
 	SDL_Texture* getTexture();
 	SDL_Rect getCoords();
 
 private:
 	SDL_Window* m_window = nullptr;
 	SDL_Renderer* m_renderer = nullptr;
+
+	std::vector<SDL_Texture*> m_textures;
+
+	//these are going
 	SDL_Texture* m_texture = nullptr;
 	SDL_Rect m_coords;
 

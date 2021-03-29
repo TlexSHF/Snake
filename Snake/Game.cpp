@@ -5,22 +5,47 @@ Game::Game() : running(true), matrix(), inputManager(inputManager.getInstance()/
 void Game::start() {
 	std::cout << matrix;
 
+	unsigned snakeX = 200;
+	unsigned snakeY = 200;
+
 	while (running) {
-		SDL_Renderer* renderer = graphics.getRenderer();
-		SDL_Texture* texture = graphics.getTexture();
-		SDL_Rect coords = graphics.getCoords();
+		//SDL_Rect coords = graphics.getCoords();
 
-		SDL_RenderCopy(
-			renderer,
-			texture,
-			nullptr,
-			&coords
-		);
+		//This shall not happen every update, but this is a start. Should happen every press of button (changes the coordinates)
+		auto matrixView = matrix.getLayout();
+		size_t size = matrixView.size();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				auto cell = matrix.getLayout()[i][j];
+				unsigned index = 0;
 
+				switch (cell.getType()) {
+				case '0':
+					index = 0;
+					break;
+				case 'w':
+					index = 1;
+					break;
+				case 's':
+					index = 2;
+					break;
+				case 'f':
+					index = 3;
+					break;
+				case 'h':
+					index = 4;
+					break;
+				}
+
+				graphics.renderTexture(index, j * 100, i * 100);
+			}
+		}
+
+		/*graphics.renderTexture(4, snakeX, snakeY);
+		graphics.renderTexture(1, 400, 200);
+		graphics.renderTexture(6, snakeX, snakeY);*/
+		graphics.renderGraphics();
 		inputManager.update();
-		SDL_RenderPresent(renderer);
-		SDL_RenderClear(renderer);
-
 
 		/* Escapes */
 		if (inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {

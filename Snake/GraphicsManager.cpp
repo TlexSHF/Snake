@@ -11,10 +11,11 @@ GraphicsManager::GraphicsManager() {
 	if (updateTexture("SnakeHead.bmp") == ERROR) return;
 
 	//Filling up the texture bank
-	/*m_textures.push_back(createTexture("SnakeHead.bmp"));
-	m_textures.push_back(createTexture("SnakeBlock.bmp"));
-	m_textures.push_back(createTexture("Fruit.bmp"));
-	m_textures.push_back(createTexture("BrownBlock.bmp"));*/
+	if (createTexture("Black.bmp") == ERROR) return;
+	if (createTexture("BrownBlock.bmp") == ERROR) return;
+	if (createTexture("SnakeBlock.bmp") == ERROR) return;
+	if (createTexture("Fruit.bmp") == ERROR) return;	
+	if (createTexture("SnakeHead.bmp") == ERROR) return;
 }
 
 GraphicsManager::~GraphicsManager() {
@@ -47,8 +48,7 @@ int GraphicsManager::updateTexture(std::string image) {
 	return OK;
 }
 
-/*void GraphicsManager::createSprite(SDL_Texture* texture, SDL_Rect& coords, std::string image, int x, int y) {
-
+int GraphicsManager::createTexture(std::string image) {
 	SDL_Surface* surface = SDL_LoadBMP(image.c_str());
 
 	if (surface == nullptr) {
@@ -57,13 +57,35 @@ int GraphicsManager::updateTexture(std::string image) {
 		SDL_DestroyRenderer(m_renderer);
 		SDL_DestroyWindow(m_window);
 		SDL_Quit();
+		return ERROR;
 	}
-
-	texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-	coords = createCoords(surface, x, y);
-
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);
 	SDL_FreeSurface(surface);
-}*/
+
+	m_textures.push_back(texture);
+	return OK;
+}
+
+void GraphicsManager::renderTexture(unsigned index, unsigned x, unsigned y) {
+
+	SDL_Rect coords;
+	coords.x = x;
+	coords.y = y;
+	coords.w = 100;
+	coords.h = 100;
+
+	SDL_RenderCopy(
+		m_renderer,
+		m_textures[index],
+		nullptr,
+		&coords
+	);
+}
+
+void GraphicsManager::renderGraphics() {
+	SDL_RenderPresent(m_renderer);
+	SDL_RenderClear(m_renderer);
+}
 
 void GraphicsManager::setX(int x) {
 	m_coords.x = x;
@@ -81,6 +103,10 @@ SDL_Renderer* GraphicsManager::getRenderer() {
 	return m_renderer;
 }
 
+std::vector<SDL_Texture*> GraphicsManager::getTextures() {
+	return m_textures;
+}
+
 SDL_Texture* GraphicsManager::getTexture() {
 	return m_texture;
 }
@@ -96,8 +122,8 @@ int GraphicsManager::createWindow() {
 		"The amazing window!",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		800,
-		800,
+		1000,
+		1000,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
 	);
 
@@ -137,18 +163,5 @@ int GraphicsManager::setRect(SDL_Surface* surface) {
 		m_coords.x = 0;
 		m_coords.y = 0;
 	}
-
 	return OK;
 }
-
-/*SDL_Rect GraphicsManager::createCoords(SDL_Surface* surface, int x, int y) {
-	SDL_Rect coords;
-
-	coords.h = surface->h / 2;
-	coords.w = surface->w / 2;
-	coords.x = x;
-	coords.y = y;
-
-
-	return coords;
-}*/

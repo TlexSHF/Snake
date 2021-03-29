@@ -164,6 +164,7 @@
     <Image Include="..\..\SnakeExam\SnakeExam\Fruit.bmp" />
     <Image Include="..\..\SnakeExam\SnakeExam\SnakeBlock.bmp" />
     <Image Include="..\..\SnakeExam\SnakeExam\SnakeHead.bmp" />
+    <Image Include="D:\KRISTANIA\2021-0Spring\C++\Eksamen2021Cpp\Sprites\Black.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

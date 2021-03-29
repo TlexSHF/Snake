@@ -13,6 +13,10 @@ class Matrix {
 public:
 	Matrix();
 
+	/* Getters */
+	std::array<std::array<Cell, size>, size> getLayout();
+
+
 	/* Updating */
 	void updateBoard();
 	void checkCollision();
@@ -64,6 +68,11 @@ inline Matrix<size>::Matrix() : matrix(), snake(4, 6), fruit(5, 6) { //THIS CAN 
 
 	createWalls();
 	updateBoard();
+}
+
+template<size_t size>
+inline std::array<std::array<Cell, size>, size> Matrix<size>::getLayout() {
+	return matrix;
 }
 
 template<size_t size>

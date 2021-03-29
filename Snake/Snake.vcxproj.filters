@@ -76,5 +76,8 @@
     <Image Include="..\..\SnakeExam\SnakeExam\SnakeHead.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="D:\KRISTANIA\2021-0Spring\C++\Eksamen2021Cpp\Sprites\Black.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
