@@ -8,7 +8,11 @@ void Game::start() {
 	unsigned snakeX = 200;
 	unsigned snakeY = 200;
 
+	Direction direction = Direction::up;
+
 	//Have taken away renderclear. This might cause issues? <<<----
+	
+	auto timeCount = time.now();
 
 	renderMatrix();
 
@@ -29,31 +33,47 @@ void Game::start() {
 
 		/* Arrows - Input */
 		if (inputManager.keyDown(SDL_SCANCODE_UP) /*|| inputManager.keyStillDown(SDL_SCANCODE_UP)*/) {
-			std::cout << "UP" << std::endl;
-			matrix.moveUp();
-			std::cout << matrix;
-			renderMatrix();
+			direction = Direction::up;
 
 		} else if (inputManager.keyDown(SDL_SCANCODE_DOWN) /*|| inputManager.keyStillDown(SDL_SCANCODE_DOWN)*/) {
-			std::cout << "DOWN" << std::endl;
-			matrix.moveDown();
-			std::cout << matrix;
-			renderMatrix();
+			direction = Direction::down;
 
 		} else if (inputManager.keyDown(SDL_SCANCODE_RIGHT) /*|| inputManager.keyStillDown(SDL_SCANCODE_RIGHT)*/) {
-			std::cout << "RIGHT" << std::endl;
-			matrix.moveRight();
-			std::cout << matrix;
-			renderMatrix();
+			direction = Direction::right;
 
 		} else if (inputManager.keyDown(SDL_SCANCODE_LEFT) /*|| inputManager.keyStillDown(SDL_SCANCODE_LEFT)*/) {
-			std::cout << "LEFT" << std::endl;
-			matrix.moveLeft();
-			std::cout << matrix;
-			renderMatrix();
+			direction = Direction::left;
 
-		} else {
-			//std::cout << "STOP" << std::endl;
+		}
+
+		std::chrono::duration<double> diff = time.now() - timeCount;
+		if (diff.count() > 0.2) {
+			timeCount = time.now();
+
+			if (direction == Direction::up) {
+				std::cout << "UP" << std::endl;
+				matrix.moveUp();
+				std::cout << matrix;
+				renderMatrix();
+
+			} else if (direction == Direction::down) {
+				std::cout << "DOWN" << std::endl;
+				matrix.moveDown();
+				std::cout << matrix;
+				renderMatrix();
+
+			} else if (direction == Direction::right) {
+				std::cout << "RIGHT" << std::endl;
+				matrix.moveRight();
+				std::cout << matrix;
+				renderMatrix();
+
+			} else if (direction == Direction::left) {
+				std::cout << "LEFT" << std::endl;
+				matrix.moveLeft();
+				std::cout << matrix;
+				renderMatrix();
+			}
 		}
 	}
 }
@@ -67,9 +87,9 @@ void Game::renderMatrix() {
 			auto cell = matrix.getLayout()[i][j];
 			unsigned index = 0;
 
-			/*if (matrix.isGameOver()) {
+			if (matrix.isGameOver()) {
 				graphics.renderTexture(5, j * 100, i * 100);
-			} else {*/
+			} else {
 				switch (cell.getType()) {
 					case '0':
 						index = 0;
@@ -89,7 +109,7 @@ void Game::renderMatrix() {
 				}
 
 				graphics.renderTexture(index, j * 100, i * 100);
-			//}
+			}
 			
 		}
 	}

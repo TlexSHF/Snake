@@ -11,7 +11,7 @@
 #include "InputManager.h"
 
 enum class Direction {
-	empty,
+	stop,
 	up,
 	down,
 	right,
