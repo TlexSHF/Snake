@@ -16,6 +16,7 @@ GraphicsManager::GraphicsManager() {
 	if (createTexture("SnakeBlock.bmp") == ERROR) return;
 	if (createTexture("Fruit.bmp") == ERROR) return;	
 	if (createTexture("SnakeHead.bmp") == ERROR) return;
+	if (createTexture("GameOver.bmp") == ERROR) return;
 }
 
 GraphicsManager::~GraphicsManager() {
@@ -84,7 +85,7 @@ void GraphicsManager::renderTexture(unsigned index, unsigned x, unsigned y) {
 
 void GraphicsManager::renderGraphics() {
 	SDL_RenderPresent(m_renderer);
-	SDL_RenderClear(m_renderer);
+	//SDL_RenderClear(m_renderer);
 }
 
 void GraphicsManager::setX(int x) {

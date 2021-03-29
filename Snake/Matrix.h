@@ -15,6 +15,7 @@ public:
 
 	/* Getters */
 	std::array<std::array<Cell, size>, size> getLayout();
+	bool isGameOver();
 
 
 	/* Updating */
@@ -46,6 +47,7 @@ private:
 	std::vector<Coords> walls;
 	Snake snake;
 	Coords fruit;
+	bool gameOver = false;
 
 	/* Creations */
 	void createWalls();
@@ -76,6 +78,11 @@ inline std::array<std::array<Cell, size>, size> Matrix<size>::getLayout() {
 }
 
 template<size_t size>
+inline bool Matrix<size>::isGameOver() {
+	return gameOver;
+}
+
+template<size_t size>
 void Matrix<size>::updateBoard() {
 
 	checkCollision();
@@ -94,8 +101,10 @@ inline void Matrix<size>::checkCollision() {
 	unsigned y = snake.getY();
 	unsigned x = snake.getX();
 
-	if (matrix[y][x].getType() == 'w' || matrix[y][x].getType() == 's')
+	if (matrix[y][x].getType() == 'w' || matrix[y][x].getType() == 's') {
 		std::cout << "Snake Crashed. Game Over!" << std::endl;
+		gameOver = true;
+	}
 }
 
 template<size_t size>

@@ -16,6 +16,8 @@ private:
 	GraphicsManager graphics;
 
 	bool running;
+
+	void renderMatrix();
 };
 
 #endif
