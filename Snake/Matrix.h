@@ -65,7 +65,11 @@ private:
 };
 
 template<size_t size>
-inline Matrix<size>::Matrix() : matrix(), snake(4, 6), fruit(5, 6) { //THIS CAN NOT BE HARDCODED
+inline Matrix<size>::Matrix() : 
+	matrix(), 
+	snake(4, 6), //THESE CAN NOT BE HARDCODED
+	fruit(5, 6) { //THESE CAN NOT BE HARDCODED
+
 	srand(time(NULL)); //init psuedo random number
 
 	createWalls();

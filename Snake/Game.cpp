@@ -1,12 +1,17 @@
 #include "Game.h"
 
-Game::Game() : running(true), matrix(), inputManager(inputManager.getInstance()/*, graphics()*/){}
+Game::Game() : 
+	running(true), 
+	speed(0.2),
+	matrix(), 
+	inputManager(inputManager.getInstance()), 
+	graphics("The amazing Snake!", 1000) {
+
+	fillTextureBank();
+}
 
 void Game::start() {
 	std::cout << matrix;
-
-	unsigned snakeX = 200;
-	unsigned snakeY = 200;
 
 	Direction direction = Direction::up;
 
@@ -17,9 +22,6 @@ void Game::start() {
 	renderMatrix();
 
 	while (running) {
-		//SDL_Rect coords = graphics.getCoords();
-		
-		//graphics.renderTexture(4, snakeX, snakeY);
 		graphics.renderGraphics();
 		inputManager.update();
 
@@ -47,7 +49,7 @@ void Game::start() {
 		}
 
 		std::chrono::duration<double> diff = time.now() - timeCount;
-		if (diff.count() > 0.2) {
+		if (diff.count() > speed) {
 			timeCount = time.now();
 
 			if (direction == Direction::up) {
@@ -87,9 +89,9 @@ void Game::renderMatrix() {
 			auto cell = matrix.getLayout()[i][j];
 			unsigned index = 0;
 
-			if (matrix.isGameOver()) {
+			/*if (matrix.isGameOver()) {
 				graphics.renderTexture(5, j * 100, i * 100);
-			} else {
+			} else {*/
 				switch (cell.getType()) {
 					case '0':
 						index = 0;
@@ -108,9 +110,19 @@ void Game::renderMatrix() {
 						break;
 				}
 
-				graphics.renderTexture(index, j * 100, i * 100);
-			}
+				graphics.renderTexture(index, j, i, size);
+			//}
 			
 		}
 	}
+}
+
+void Game::fillTextureBank() {
+
+	graphics.createTexture("Black.bmp");
+	graphics.createTexture("BrownBlock.bmp");
+	graphics.createTexture("SnakeBlock.bmp");
+	graphics.createTexture("Fruit.bmp");
+	graphics.createTexture("SnakeHead.bmp");
+	graphics.createTexture("GameOver.bmp");
 }

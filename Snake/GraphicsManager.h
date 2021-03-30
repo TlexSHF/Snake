@@ -20,42 +20,29 @@ enum class Direction {
 
 class GraphicsManager {
 public:
-	GraphicsManager();
+	GraphicsManager(std::string name, size_t size);
+	GraphicsManager(std::string name, size_t width, size_t height);
 	~GraphicsManager();
 
-	int createTexture(std::string image);
-	void renderTexture(unsigned index, unsigned x, unsigned y);
+	void createTexture(std::string image);
+	void renderTexture(unsigned index, unsigned x, unsigned y, size_t gridSize);
 	void renderGraphics();
 
-	void setX(int x);
-	void setY(int y);
-
-	SDL_Window* getWindow();
-	SDL_Renderer* getRenderer();
 	std::vector<SDL_Texture*> getTextures();
-
-	//this one going
-	int updateTexture(std::string image);
-	//these are going
-	SDL_Texture* getTexture();
-	SDL_Rect getCoords();
 
 private:
 	SDL_Window* m_window = nullptr;
 	SDL_Renderer* m_renderer = nullptr;
-
 	std::vector<SDL_Texture*> m_textures;
 
-	//these are going
-	SDL_Texture* m_texture = nullptr;
-	SDL_Rect m_coords;
+	std::string m_windowName;
+	size_t m_windowWidth;
+	size_t m_windowHeight;
 
 	bool m_exitFailure = false;
 
 	int createWindow();
 	int createRenderer();
-	int setRect(SDL_Surface* surface);
-	//SDL_Rect createCoords(SDL_Surface* surface, int x, int y);
 };
 
 #endif

@@ -18,8 +18,10 @@ private:
 	std::chrono::high_resolution_clock time;
 
 	bool running;
+	double speed;
 
 	void renderMatrix();
+	void fillTextureBank();
 };
 
 #endif
