@@ -1,11 +1,13 @@
 #include "Snake.h"
 
-Snake::Snake(unsigned x, unsigned y) {
+Snake::Snake(unsigned x, unsigned y, size_t boardSize) :
+	boardSize(boardSize) {
+
 	limbs.emplace_back(x, y);
 	//limbs.emplace_back(x - 1, y); //are we gonna have two or nah?
 }
 
-void Snake::update(unsigned x, unsigned y) {
+void Snake::update(int x, int y) {
 	//Will only update if atleast one of the coordinates differ from previous
 	if (x != limbs[0].getX() || y != limbs[0].getY()) {
 
@@ -18,7 +20,18 @@ void Snake::update(unsigned x, unsigned y) {
 			);
 		}
 
-		limbs[0].setCoords(x, y);
+		//Cannot go outside of board border (0-size)
+		if (x >= boardSize) {
+			limbs[0].setCoords(0, y);
+		} else if (x < 0) {
+			limbs[0].setCoords(boardSize - 1, y);
+		} else if (y >= boardSize) {
+			limbs[0].setCoords(x, 0);
+		} else if (x < 0) {
+			limbs[0].setCoords(x, boardSize - 1);
+		} else {
+			limbs[0].setCoords(x, y);
+		}
 	}
 }
 
@@ -54,10 +67,10 @@ void Snake::addLimb() {
 	);
 }
 
-unsigned Snake::getX() { //MAKE SURE THAT THERE ARE NO WAYS THE LIMBS VECTOR CAN BE 0
+int Snake::getX() { //MAKE SURE THAT THERE ARE NO WAYS THE LIMBS VECTOR CAN BE 0
 	return limbs[0].getX();
 }
 
-unsigned Snake::getY() {
+int Snake::getY() {
 	return limbs[0].getY();
 }

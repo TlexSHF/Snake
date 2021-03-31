@@ -1,8 +1,8 @@
 #include "Game.h"
 
 int main() {
-	Game game;
-	game.start();
+	Game game(1000);
+	game.menu();
 
 	return 0;
 }

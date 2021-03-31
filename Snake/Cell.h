@@ -6,6 +6,7 @@
 struct Cell {
 public:
 	char getType();
+	char getPrevType();
 	void setType(char t);
 
 	friend std::ostream& operator<<(std::ostream& os, Cell& c) {
@@ -13,6 +14,7 @@ public:
 	}
 private:
 	char type = '0';
+	char prevType = type;
 };
 
 #endif

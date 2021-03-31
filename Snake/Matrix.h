@@ -16,7 +16,7 @@ public:
 	/* Getters */
 	std::array<std::array<Cell, size>, size> getLayout();
 	bool isGameOver();
-
+	bool isSpecialSnake();
 
 	/* Updating */
 	void updateBoard();
@@ -47,12 +47,15 @@ private:
 	std::vector<Coords> walls;
 	Snake snake;
 	Coords fruit;
+	Coords specialFruit;
+	bool specialSnake = false;
 	bool gameOver = false;
+	unsigned timesSpecial = 0;
 
 	/* Creations */
 	void createWalls();
 	void createSnake();
-	void newFruit();
+	void newFruit(Coords& fruit);
 
 	/* Updating objects */
 	void emptyBoard();
@@ -62,13 +65,15 @@ private:
 
 	/* Actions */
 	void eatFruit();
+	void eatSpecial();
 };
 
 template<size_t size>
-inline Matrix<size>::Matrix() : 
-	matrix(), 
-	snake(4, 6), //THESE CAN NOT BE HARDCODED
-	fruit(5, 6) { //THESE CAN NOT BE HARDCODED
+inline Matrix<size>::Matrix() :
+	matrix(),
+	snake(4, 6, size), //THESE CAN NOT BE HARDCODED
+	fruit(5, 6),
+	specialFruit(7, 8) { //THESE CAN NOT BE HARDCODED
 
 	srand(time(NULL)); //init psuedo random number
 
@@ -87,11 +92,29 @@ inline bool Matrix<size>::isGameOver() {
 }
 
 template<size_t size>
+inline bool Matrix<size>::isSpecialSnake() {
+	return specialSnake;
+}
+
+template<size_t size>
 void Matrix<size>::updateBoard() {
 
-	checkCollision();
+	//Snake can only be special for a couple of moves
+	//If special snake, it will not collide
+	if (specialSnake == true) {
+		timesSpecial++;
+		if (timesSpecial == 10) {
+			timesSpecial = 0;
+			specialSnake = false;
+		}
+	} else {
+		checkCollision();
+	}
+
 	if (fruit == snake.getLimbs()[0])
 		eatFruit();
+	if (specialFruit == snake.getLimbs()[0])
+		eatSpecial();
 
 	emptyBoard();
 	updateSnake();
@@ -104,7 +127,7 @@ inline void Matrix<size>::checkCollision() {
 
 	unsigned y = snake.getY();
 	unsigned x = snake.getX();
-
+	
 	if (matrix[y][x].getType() == 'w' || matrix[y][x].getType() == 's') {
 		std::cout << "Snake Crashed. Game Over!" << std::endl;
 		gameOver = true;
@@ -153,7 +176,7 @@ inline void Matrix<size>::createSnake() {
 }
 
 template<size_t size>
-inline void Matrix<size>::newFruit() {
+inline void Matrix<size>::newFruit(Coords& f) {
 	//Cannot spawn on walls
 	size_t start = 1;
 	size_t range = size - 2;
@@ -167,7 +190,7 @@ inline void Matrix<size>::newFruit() {
 
 	} while (matrix[rdmY][rdmX].getType() != '0');
 
-	fruit.setCoords(rdmX, rdmY);
+	f.setCoords(rdmX, rdmY);
 }
 
 template<size_t size>
@@ -197,12 +220,20 @@ void Matrix<size>::updateSnake() {
 template<size_t size>
 inline void Matrix<size>::updateFruit() {
 	matrix[fruit.getY()][fruit.getX()].setType('f');
+	matrix[specialFruit.getY()][specialFruit.getX()].setType('e');
 }
 
 template<size_t size>
 inline void Matrix<size>::eatFruit() {
 	snake.addLimb();
-	newFruit();
+	newFruit(fruit);
+}
+
+template<size_t size>
+inline void Matrix<size>::eatSpecial() {
+	specialSnake = true;
+	timesSpecial = 0;
+	newFruit(specialFruit);
 }
 
 #endif

@@ -1,19 +1,57 @@
 #include "Game.h"
 
-Game::Game() : 
+Game::Game(size_t size) : 
 	running(true), 
-	speed(0.2),
+	speed(0.3),
 	matrix(), 
+	windowSize(size),
 	inputManager(inputManager.getInstance()), 
-	graphics("The amazing Snake!", 1000) {
+	graphics("The amazing Snake!", size, 150) {
 
 	fillTextureBank();
+}
+
+void Game::menu() {
+	bool menu = true;
+
+	std::cout << "Welcome to the Snake Game\n"
+		"[1] - Start Game\n"
+		"[2] - Leaderboard\n"
+		"[ESC] - Exit Game" << std::endl;
+
+	graphics.clearScreen();
+	graphics.readyTexture('g', 0, 0, 100, 100);
+	graphics.readyTexture('t', 10, 20, 80, 20);
+	graphics.readyTexture('t', 10, 50, 80, 20);
+	graphics.readyTexture('p', 15, 25, 40, 10);
+	graphics.readyTexture('l', 15, 55, 40, 10);
+	graphics.renderGraphics();
+	while (menu) {
+		
+		inputManager.update();
+		
+		/* Escapes */
+		if (inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
+			menu = false;
+		}
+		if (SDL_HasEvent(SDL_QUIT)) {
+			menu = false;
+		}
+
+		/* Actions */
+		if (inputManager.keyDown(SDL_SCANCODE_1)) {
+			renderGameMargin();
+			start();
+			menu = false;
+		}
+	}
 }
 
 void Game::start() {
 	std::cout << matrix;
 
-	Direction direction = Direction::up;
+	Direction newDir = Direction::up;
+	Direction direction = newDir;
 
 	//Have taken away renderclear. This might cause issues? <<<----
 	
@@ -34,95 +72,112 @@ void Game::start() {
 		}
 
 		/* Arrows - Input */
-		if (inputManager.keyDown(SDL_SCANCODE_UP) /*|| inputManager.keyStillDown(SDL_SCANCODE_UP)*/) {
-			direction = Direction::up;
+		if (inputManager.keyDown(SDL_SCANCODE_UP)) {
+			newDir = Direction::up;
 
-		} else if (inputManager.keyDown(SDL_SCANCODE_DOWN) /*|| inputManager.keyStillDown(SDL_SCANCODE_DOWN)*/) {
-			direction = Direction::down;
+		} else if (inputManager.keyDown(SDL_SCANCODE_DOWN)) {
+			newDir = Direction::down;
 
-		} else if (inputManager.keyDown(SDL_SCANCODE_RIGHT) /*|| inputManager.keyStillDown(SDL_SCANCODE_RIGHT)*/) {
-			direction = Direction::right;
+		} else if (inputManager.keyDown(SDL_SCANCODE_RIGHT)) {
+			newDir = Direction::right;
 
-		} else if (inputManager.keyDown(SDL_SCANCODE_LEFT) /*|| inputManager.keyStillDown(SDL_SCANCODE_LEFT)*/) {
-			direction = Direction::left;
+		} else if (inputManager.keyDown(SDL_SCANCODE_LEFT)) {
+			newDir = Direction::left;
 
 		}
 
+		//Will only move once every {speed} seconds
 		std::chrono::duration<double> diff = time.now() - timeCount;
 		if (diff.count() > speed) {
 			timeCount = time.now();
 
+			//The snake cannot move in the direction opposite of the current
+			if (!(newDir == !direction)) {
+				direction = newDir;
+			}
+			
+
 			if (direction == Direction::up) {
+				
 				std::cout << "UP" << std::endl;
 				matrix.moveUp();
-				std::cout << matrix;
-				renderMatrix();
 
 			} else if (direction == Direction::down) {
+				
 				std::cout << "DOWN" << std::endl;
 				matrix.moveDown();
-				std::cout << matrix;
-				renderMatrix();
 
 			} else if (direction == Direction::right) {
+				
 				std::cout << "RIGHT" << std::endl;
 				matrix.moveRight();
-				std::cout << matrix;
-				renderMatrix();
 
 			} else if (direction == Direction::left) {
+				
 				std::cout << "LEFT" << std::endl;
 				matrix.moveLeft();
-				std::cout << matrix;
-				renderMatrix();
 			}
+			std::cout << matrix;
+			renderMatrix();
 		}
 	}
+}
+
+void Game::renderGameMargin() {
+	graphics.clearScreen();
+	graphics.readyTexture('g', 0, 0, 100, 100);
+	graphics.renderGraphics();
 }
 
 void Game::renderMatrix() {
 	auto matrixView = matrix.getLayout();
 	size_t size = matrixView.size();
+	bool specialSnake = matrix.isSpecialSnake();
+	static bool specialColor = false;
 
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
+	if (specialSnake)
+		specialColor = !specialColor;
+
+	for (Uint8 i = 0; i < size; i++) {
+		for (Uint8 j = 0; j < size; j++) {
 			auto cell = matrix.getLayout()[i][j];
-			unsigned index = 0;
+			char type = cell.getType();
 
 			/*if (matrix.isGameOver()) {
-				graphics.renderTexture(5, j * 100, i * 100);
-			} else {*/
-				switch (cell.getType()) {
-					case '0':
-						index = 0;
-						break;
-					case 'w':
-						index = 1;
-						break;
-					case 's':
-						index = 2;
-						break;
-					case 'f':
-						index = 3;
-						break;
-					case 'h':
-						index = 4;
-						break;
-				}
+				index = 5;
+				running = false;
+			} else {}*/
 
-				graphics.renderTexture(index, j, i, size);
+			//Will only update texture, if content has changed <<<< some problems i must admit
+			//if ( type != cell.getPrevType()) {
+
+			if (specialSnake && specialColor) {
+				if (type == 'h') {
+					type = 'v';
+				} else if (type == 's') {
+					type = 'i';
+				}
+			}
+			graphics.readyTexture(type, j, i, size);
 			//}
-			
 		}
 	}
 }
 
 void Game::fillTextureBank() {
 
-	graphics.createTexture("Black.bmp");
-	graphics.createTexture("BrownBlock.bmp");
-	graphics.createTexture("SnakeBlock.bmp");
-	graphics.createTexture("Fruit.bmp");
-	graphics.createTexture("SnakeHead.bmp");
-	graphics.createTexture("GameOver.bmp");
+	//should have some way of indexing these with titles or something
+	graphics.createTexture("Sprites/Black.bmp", '0');
+	graphics.createTexture("Sprites/BrownBlock.bmp", 'w');
+	graphics.createTexture("Sprites/SnakeHead.bmp", 'h');
+	graphics.createTexture("Sprites/SnakeBlock.bmp", 's');
+	graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');
+	graphics.createTexture("Sprites/InvertedHead.bmp", 'v');
+	graphics.createTexture("Sprites/Fruit.bmp", 'f');
+	graphics.createTexture("Sprites/SpecialFruit.bmp", 'e');
+	graphics.createTexture("Sprites/GameOver.bmp", 'o');
+	graphics.createTexture("Sprites/Green.bmp", 'g');
+	graphics.createTexture("Sprites/TextBox.bmp", 't');
+	graphics.createTexture("Sprites/StartGame.bmp", 'p');
+	graphics.createTexture("Sprites/Leaderboard.bmp", 'l');
 }

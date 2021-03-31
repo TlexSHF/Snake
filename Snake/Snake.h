@@ -6,12 +6,12 @@
 
 class Snake {
 public:
-	Snake(unsigned x, unsigned y);
+	Snake(unsigned x, unsigned y, size_t boardSize);
 
 	void addLimb();
 
-	unsigned getX();
-	unsigned getY();
+	int getX();
+	int getY();
 	
 	std::vector<Coords> getLimbs();
 
@@ -24,7 +24,9 @@ public:
 
 private:
 	std::vector<Coords> limbs;
-	void update(unsigned x, unsigned y);
+	int boardSize;
+
+	void update(int x, int y);
 };
 
 #endif

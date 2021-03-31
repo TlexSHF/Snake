@@ -2,13 +2,14 @@
 #include "GraphicsManager.h"
 
 /* ------------- PUBLIC ------------- */
-GraphicsManager::GraphicsManager(std::string name, size_t size) :
-	GraphicsManager(name, size, size) {}
+GraphicsManager::GraphicsManager(std::string name, size_t size, size_t margin) :
+	GraphicsManager(name, size, size, margin) {}
 
-GraphicsManager::GraphicsManager(std::string name, size_t width, size_t height) : 
+GraphicsManager::GraphicsManager(std::string name, size_t width, size_t height, size_t margin) : 
 	m_windowName(name),
 	m_windowWidth(width), 
-	m_windowHeight(height) {
+	m_windowHeight(height),
+	m_margin(margin) {
 
 	SDL_Init(SDL_INIT_VIDEO);
 
@@ -21,7 +22,7 @@ GraphicsManager::~GraphicsManager() {
 	SDL_Quit();
 }
 
-void GraphicsManager::createTexture(std::string image) {
+void GraphicsManager::createTexture(std::string image, char tag) {
 	SDL_Surface* surface = SDL_LoadBMP(image.c_str());
 
 	if (surface == nullptr) {
@@ -35,28 +36,30 @@ void GraphicsManager::createTexture(std::string image) {
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);
 		SDL_FreeSurface(surface);
 
-		m_textures.push_back(texture);
+		m_textures.emplace_back(texture, tag);
 	}
 }
 
-void GraphicsManager::renderTexture(unsigned index, unsigned x, unsigned y, size_t gridSize) {
-
-	x = x * (m_windowWidth / gridSize);
-	y = y * (m_windowHeight / gridSize);
-
+void GraphicsManager::readyTexture(char indexTag, unsigned x, unsigned y, size_t gridSize) {
 
 	SDL_Rect coords;
-	coords.x = x;
-	coords.y = y;
-	coords.w = m_windowWidth / gridSize;
-	coords.h = m_windowHeight / gridSize;
+	coords.x = x * (m_windowWidth - m_margin*2) / gridSize + m_margin;
+	coords.y = y * (m_windowHeight - m_margin*2) / gridSize + m_margin;
+	coords.w = (m_windowWidth - m_margin*2) / gridSize;
+	coords.h = (m_windowHeight - m_margin*2) / gridSize;
 
-	SDL_RenderCopy(
-		m_renderer,
-		m_textures[index],
-		nullptr,
-		&coords
-	);
+	renderCopy(indexTag, coords);
+}
+
+void GraphicsManager::readyTexture(char indexTag, double xPercent, double yPercent, double wPercent, double hPercent) {
+
+	SDL_Rect coords;
+	coords.x = m_windowWidth * (xPercent / 100);
+	coords.y = m_windowHeight * (yPercent / 100);
+	coords.w = m_windowWidth * (wPercent / 100);
+	coords.h = m_windowHeight * (hPercent / 100);
+
+	renderCopy(indexTag, coords);
 }
 
 void GraphicsManager::renderGraphics() {
@@ -64,7 +67,11 @@ void GraphicsManager::renderGraphics() {
 	//SDL_RenderClear(m_renderer);
 }
 
-std::vector<SDL_Texture*> GraphicsManager::getTextures() {
+void GraphicsManager::clearScreen() {
+	SDL_RenderClear(m_renderer);
+}
+
+std::vector<TexturePair> GraphicsManager::getTextures() {
 	return m_textures;
 }
 
@@ -102,4 +109,20 @@ int GraphicsManager::createRenderer() {
 	}
 
 	return OK;
+}
+
+void GraphicsManager::renderCopy(char indexTag, SDL_Rect& coords) {
+	unsigned size = m_textures.size();
+	for (int i = 0; i < size; i++) {
+
+		if (m_textures[i].tag == indexTag) {
+			SDL_RenderCopy(
+				m_renderer,
+				m_textures[i].texture,
+				nullptr,
+				&coords
+			);
+			break;
+		}
+	}
 }

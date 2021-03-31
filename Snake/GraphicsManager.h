@@ -8,41 +8,38 @@
 #include <string>
 #include <SDL.h>
 #include <vector>
-#include "InputManager.h"
-
-enum class Direction {
-	stop,
-	up,
-	down,
-	right,
-	left
-};
+#include "TexturePair.h"
 
 class GraphicsManager {
 public:
-	GraphicsManager(std::string name, size_t size);
-	GraphicsManager(std::string name, size_t width, size_t height);
+	GraphicsManager(std::string name, size_t size, size_t margin);
+	GraphicsManager(std::string name, size_t width, size_t height, size_t margin);
 	~GraphicsManager();
 
-	void createTexture(std::string image);
-	void renderTexture(unsigned index, unsigned x, unsigned y, size_t gridSize);
-	void renderGraphics();
+	void createTexture(std::string image, char tag);
+	void readyTexture(char indexTag, unsigned x, unsigned y, size_t gridSize);
+	void readyTexture(char indexTag, double xPercent, double yPercent, double wPercent, double hPercent);
 
-	std::vector<SDL_Texture*> getTextures();
+	void renderGraphics();
+	void clearScreen();
+
+	std::vector<TexturePair> getTextures();
 
 private:
 	SDL_Window* m_window = nullptr;
 	SDL_Renderer* m_renderer = nullptr;
-	std::vector<SDL_Texture*> m_textures;
+	std::vector<TexturePair> m_textures;
 
 	std::string m_windowName;
 	size_t m_windowWidth;
 	size_t m_windowHeight;
+	size_t m_margin;
 
 	bool m_exitFailure = false;
 
 	int createWindow();
 	int createRenderer();
+	void renderCopy(char indexTag, SDL_Rect& coords);
 };
 
 #endif
