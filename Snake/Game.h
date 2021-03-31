@@ -24,6 +24,7 @@ private:
 	double speed;
 
 	void start();
+	void gameOver();
 
 	void renderGameMargin();
 	void renderMatrix();

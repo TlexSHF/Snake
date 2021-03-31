@@ -27,7 +27,7 @@ void Snake::update(int x, int y) {
 			limbs[0].setCoords(boardSize - 1, y);
 		} else if (y >= boardSize) {
 			limbs[0].setCoords(x, 0);
-		} else if (x < 0) {
+		} else if (y < 0) {
 			limbs[0].setCoords(x, boardSize - 1);
 		} else {
 			limbs[0].setCoords(x, y);

@@ -120,6 +120,19 @@ void Game::start() {
 			std::cout << matrix;
 			renderMatrix();
 		}
+		if (matrix.isGameOver()) {
+			running = false;
+		}
+	}
+	if(matrix.isGameOver())
+		gameOver();
+}
+
+void Game::gameOver() {
+	graphics.readyTexture('o', 0, 0, 100, 100);
+	graphics.renderGraphics();
+	while (!(inputManager.keyDown(SDL_SCANCODE_RETURN) || inputManager.keyDown(SDL_SCANCODE_ESCAPE))) {
+		inputManager.update();
 	}
 }
 
@@ -142,11 +155,6 @@ void Game::renderMatrix() {
 		for (Uint8 j = 0; j < size; j++) {
 			auto cell = matrix.getLayout()[i][j];
 			char type = cell.getType();
-
-			/*if (matrix.isGameOver()) {
-				index = 5;
-				running = false;
-			} else {}*/
 
 			//Will only update texture, if content has changed <<<< some problems i must admit
 			//if ( type != cell.getPrevType()) {

@@ -49,6 +49,7 @@ private:
 	Coords fruit;
 	Coords specialFruit;
 	bool specialSnake = false;
+	bool visibleSpecialFruit = false;
 	bool gameOver = false;
 	unsigned timesSpecial = 0;
 
@@ -56,6 +57,7 @@ private:
 	void createWalls();
 	void createSnake();
 	void newFruit(Coords& fruit);
+	bool canSpawnSpecial();
 
 	/* Updating objects */
 	void emptyBoard();
@@ -194,6 +196,18 @@ inline void Matrix<size>::newFruit(Coords& f) {
 }
 
 template<size_t size>
+inline bool Matrix<size>::canSpawnSpecial() {
+	//5% sannsynlighet for å spawne en special fruit
+	unsigned possibility = rand() % 20;
+	if (possibility == 1) {
+		visibleSpecialFruit = true;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+template<size_t size>
 void Matrix<size>::emptyBoard() {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
@@ -220,7 +234,9 @@ void Matrix<size>::updateSnake() {
 template<size_t size>
 inline void Matrix<size>::updateFruit() {
 	matrix[fruit.getY()][fruit.getX()].setType('f');
-	matrix[specialFruit.getY()][specialFruit.getX()].setType('e');
+
+	if(canSpawnSpecial() || visibleSpecialFruit)
+		matrix[specialFruit.getY()][specialFruit.getX()].setType('e');
 }
 
 template<size_t size>
@@ -232,6 +248,7 @@ inline void Matrix<size>::eatFruit() {
 template<size_t size>
 inline void Matrix<size>::eatSpecial() {
 	specialSnake = true;
+	visibleSpecialFruit = false;
 	timesSpecial = 0;
 	newFruit(specialFruit);
 }
