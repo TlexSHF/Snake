@@ -57,7 +57,7 @@ void Game::start() {
 	
 	auto timeCount = time.now();
 
-	renderMatrix();
+	updateMatrix();
 
 	while (running) {
 		graphics.renderGraphics();
@@ -69,6 +69,11 @@ void Game::start() {
 		}
 		if (SDL_HasEvent(SDL_QUIT)) {
 			running = false;
+		}
+
+		/* Actions */
+		if (inputManager.keyDown(SDL_SCANCODE_X) && matrix.getSpecialFruits() > 0) {
+			matrix.activateSpecialFruit();
 		}
 
 		/* Arrows - Input */
@@ -118,7 +123,7 @@ void Game::start() {
 				matrix.moveLeft();
 			}
 			std::cout << matrix;
-			renderMatrix();
+			updateMatrix();
 		}
 		if (matrix.isGameOver()) {
 			running = false;
@@ -142,11 +147,14 @@ void Game::renderGameMargin() {
 	graphics.renderGraphics();
 }
 
-void Game::renderMatrix() {
+void Game::updateMatrix() {
 	auto matrixView = matrix.getLayout();
 	size_t size = matrixView.size();
 	bool specialSnake = matrix.isSpecialSnake();
 	static bool specialColor = false;
+	unsigned specialFruits = matrix.getSpecialFruits();
+
+	renderGameMargin(); //TODO THIS MAKES IT BLINK NOW AND THEN... BUT other sollutions will not update the specialFruits-bar correctly
 
 	if (specialSnake)
 		specialColor = !specialColor;
@@ -170,6 +178,10 @@ void Game::renderMatrix() {
 			//}
 		}
 	}
+
+	for (int i = 0; i < specialFruits; i++) {
+		graphics.readyTexture('b', i, size + 1, size);
+	}
 }
 
 void Game::fillTextureBank() {
@@ -182,7 +194,7 @@ void Game::fillTextureBank() {
 	graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');
 	graphics.createTexture("Sprites/InvertedHead.bmp", 'v');
 	graphics.createTexture("Sprites/Fruit.bmp", 'f');
-	graphics.createTexture("Sprites/SpecialFruit.bmp", 'e');
+	graphics.createTexture("Sprites/SpecialFruit.bmp", 'b');
 	graphics.createTexture("Sprites/GameOver.bmp", 'o');
 	graphics.createTexture("Sprites/Green.bmp", 'g');
 	graphics.createTexture("Sprites/TextBox.bmp", 't');

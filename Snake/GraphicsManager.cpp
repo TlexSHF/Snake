@@ -9,15 +9,20 @@ GraphicsManager::GraphicsManager(std::string name, size_t width, size_t height, 
 	m_windowName(name),
 	m_windowWidth(width), 
 	m_windowHeight(height),
-	m_margin(margin) {
+	m_margin(margin),
+	m_baseWidth(width - margin * 2),
+	m_baseHeight(height - margin * 2) {
 
 	SDL_Init(SDL_INIT_VIDEO);
+	TTF_Init();
 
 	if (createWindow() == ERROR) return;
 	if (createRenderer() == ERROR) return;
 }
 
 GraphicsManager::~GraphicsManager() {
+	TTF_Quit();
+	SDL_DestroyRenderer(m_renderer);
 	SDL_DestroyWindow(m_window);
 	SDL_Quit();
 }
@@ -43,10 +48,10 @@ void GraphicsManager::createTexture(std::string image, char tag) {
 void GraphicsManager::readyTexture(char indexTag, unsigned x, unsigned y, size_t gridSize) {
 
 	SDL_Rect coords;
-	coords.x = x * (m_windowWidth - m_margin*2) / gridSize + m_margin;
-	coords.y = y * (m_windowHeight - m_margin*2) / gridSize + m_margin;
-	coords.w = (m_windowWidth - m_margin*2) / gridSize;
-	coords.h = (m_windowHeight - m_margin*2) / gridSize;
+	coords.x = x * m_baseWidth / gridSize + m_margin;
+	coords.y = y * m_baseHeight / gridSize + m_margin;
+	coords.w = m_baseWidth / gridSize;
+	coords.h = m_baseHeight / gridSize;
 
 	renderCopy(indexTag, coords);
 }
@@ -74,6 +79,16 @@ void GraphicsManager::clearScreen() {
 std::vector<TexturePair> GraphicsManager::getTextures() {
 	return m_textures;
 }
+
+unsigned GraphicsManager::getBaseWidth() {
+	return m_baseWidth;
+}
+
+unsigned GraphicsManager::getBaseHeight() {
+	return m_baseHeight;
+}
+
+
 
 /* ------------- PRIVATE ------------- */
 int GraphicsManager::createWindow() {

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <vector>
 #include "TexturePair.h"
 
@@ -23,7 +24,10 @@ public:
 	void renderGraphics();
 	void clearScreen();
 
+	/* Getters */
 	std::vector<TexturePair> getTextures();
+	unsigned getBaseWidth();
+	unsigned getBaseHeight();
 
 private:
 	SDL_Window* m_window = nullptr;
@@ -34,6 +38,8 @@ private:
 	size_t m_windowWidth;
 	size_t m_windowHeight;
 	size_t m_margin;
+	unsigned m_baseWidth;
+	unsigned m_baseHeight;
 
 	bool m_exitFailure = false;
 

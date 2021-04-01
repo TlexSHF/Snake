@@ -27,7 +27,7 @@ private:
 	void gameOver();
 
 	void renderGameMargin();
-	void renderMatrix();
+	void updateMatrix();
 	void fillTextureBank();
 };
 

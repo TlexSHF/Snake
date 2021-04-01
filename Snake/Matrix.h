@@ -17,6 +17,7 @@ public:
 	std::array<std::array<Cell, size>, size> getLayout();
 	bool isGameOver();
 	bool isSpecialSnake();
+	unsigned getSpecialFruits();
 
 	/* Updating */
 	void updateBoard();
@@ -27,6 +28,9 @@ public:
 	void moveDown();
 	void moveRight();
 	void moveLeft();
+
+	/* Actions */
+	void activateSpecialFruit();
 
 	friend std::ostream& operator<<(std::ostream& os, Matrix<size>& m) {
 		for (auto column : m.matrix) {
@@ -39,6 +43,7 @@ public:
 			}
 			os << std::endl;
 		}
+		os << "\n SpecialFruits gathered: " << m.specialFruits << std::endl;;
 		return os;
 	}
 
@@ -48,8 +53,9 @@ private:
 	Snake snake;
 	Coords fruit;
 	Coords specialFruit;
+	unsigned specialFruits = 0;
 	bool specialSnake = false;
-	bool visibleSpecialFruit = false;
+	bool visibleSpecial = false;
 	bool gameOver = false;
 	unsigned timesSpecial = 0;
 
@@ -96,6 +102,11 @@ inline bool Matrix<size>::isGameOver() {
 template<size_t size>
 inline bool Matrix<size>::isSpecialSnake() {
 	return specialSnake;
+}
+
+template<size_t size>
+inline unsigned Matrix<size>::getSpecialFruits() {
+	return specialFruits;
 }
 
 template<size_t size>
@@ -161,6 +172,13 @@ inline void Matrix<size>::moveLeft() {
 }
 
 template<size_t size>
+inline void Matrix<size>::activateSpecialFruit() {
+	specialSnake = true;
+	timesSpecial = 0;
+	specialFruits--;
+}
+
+template<size_t size>
 void Matrix<size>::createWalls() {
 	//Gathering coords of each direction 
 	// around the edges
@@ -197,10 +215,10 @@ inline void Matrix<size>::newFruit(Coords& f) {
 
 template<size_t size>
 inline bool Matrix<size>::canSpawnSpecial() {
-	//5% sannsynlighet for å spawne en special fruit
-	unsigned possibility = rand() % 20;
+	//sannsynlighet for å spawne en special fruit
+	unsigned possibility = rand() % 25;
 	if (possibility == 1) {
-		visibleSpecialFruit = true;
+		visibleSpecial = true;
 		return true;
 	} else {
 		return false;
@@ -235,8 +253,8 @@ template<size_t size>
 inline void Matrix<size>::updateFruit() {
 	matrix[fruit.getY()][fruit.getX()].setType('f');
 
-	if(canSpawnSpecial() || visibleSpecialFruit)
-		matrix[specialFruit.getY()][specialFruit.getX()].setType('e');
+	if(canSpawnSpecial() || visibleSpecial)
+		matrix[specialFruit.getY()][specialFruit.getX()].setType('b');
 }
 
 template<size_t size>
@@ -247,9 +265,11 @@ inline void Matrix<size>::eatFruit() {
 
 template<size_t size>
 inline void Matrix<size>::eatSpecial() {
-	specialSnake = true;
-	visibleSpecialFruit = false;
-	timesSpecial = 0;
+	//Kan maksimalt samle på 8 speical fruits
+	if(specialFruits <= 8)
+		specialFruits++;
+	
+	visibleSpecial = false;
 	newFruit(specialFruit);
 }
 

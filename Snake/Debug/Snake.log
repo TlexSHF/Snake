@@ -1,8 +1,2 @@
-﻿  Game.cpp
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(80,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(74): message : while compiling class template member function 'Matrix<10>::Matrix(void)'
-C:\Users\simon\source\repos\Snake\Snake\Game.cpp(6): message : see reference to function template instantiation 'Matrix<10>::Matrix(void)' being compiled
-C:\Users\simon\source\repos\Snake\Snake\Game.h(18): message : see reference to class template instantiation 'Matrix<10>' being compiled
-  main.cpp
-  Generating Code...
+﻿  main.cpp
   Snake.vcxproj -> C:\Users\simon\source\repos\Snake\Debug\Snake.exe
