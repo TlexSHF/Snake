@@ -15,7 +15,7 @@ public:
 	void menu();
 private:
 	InputManager& inputManager;
-	Matrix<8> matrix;
+	Matrix<10> matrix;
 	GraphicsManager graphics;
 	std::chrono::high_resolution_clock time;
 	size_t windowSize;

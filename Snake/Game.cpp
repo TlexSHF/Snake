@@ -21,8 +21,8 @@ void Game::menu() {
 
 	graphics.clearScreen();
 	graphics.readyTexture('g', 0, 0, 100, 100);
-	graphics.readyTexture('t', 10, 20, 80, 20);
-	graphics.readyTexture('t', 10, 50, 80, 20);
+	graphics.readyTexture('x', 10, 20, 80, 20);
+	graphics.readyTexture('x', 10, 50, 80, 20);
 	graphics.readyText('s', 15, 25);
 	graphics.readyText('l', 15, 55);
 	graphics.renderGraphics();
@@ -180,11 +180,6 @@ void Game::updateMatrix() {
 			auto cell = matrix.getLayout()[i][j];
 			char type = cell.getType();
 
-			//TWO BUGS:
-			//When eating first fruit: Matrix shows: tail only visible, not head for one 'frame'
-			//When eating second fruit: Matrix shows correct, but renders two eye-blocks after eachother
-
-			//Will only update texture, if content has changed <<<< some problems i must admit... Weird bug snake gets double eyes everytime going from 2 to 3 eyes
 			if (cell.hasChanged()) {
 
 				if (specialSnake && specialColor) {
@@ -212,17 +207,20 @@ void Game::updateMatrix() {
 
 void Game::fillTextureBank() {
 	//Textures
-	graphics.createTexture("Sprites/Black.bmp", '0');
-	graphics.createTexture("Sprites/BrownBlock.bmp", 'w');
-	graphics.createTexture("Sprites/SnakeHead.bmp", 'h');
-	graphics.createTexture("Sprites/SnakeBlock.bmp", 's');
-	graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');
-	graphics.createTexture("Sprites/InvertedHead.bmp", 'v');
-	graphics.createTexture("Sprites/Fruit.bmp", 'f');
-	graphics.createTexture("Sprites/SpecialFruit.bmp", 'b');
 	graphics.createTexture("Sprites/GameOver.bmp", 'o');
 	graphics.createTexture("Sprites/Green.bmp", 'g');
-	graphics.createTexture("Sprites/TextBox.bmp", 't');
+	graphics.createTexture("Sprites/TextBox.bmp", 'x');
+
+	//Cells
+	graphics.createTexture("Sprites/Black.bmp", '0');			//Background
+	graphics.createTexture("Sprites/BrownBlock.bmp", 'w');		//Wall
+	graphics.createTexture("Sprites/BrownBlock.bmp", 't');		//Temp Wall
+	graphics.createTexture("Sprites/SnakeHead.bmp", 'h');		//Head
+	graphics.createTexture("Sprites/SnakeBlock.bmp", 's');		//Tail
+	graphics.createTexture("Sprites/InvertedHead.bmp", 'v');	//Inverted Head
+	graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');	//Inverted Tail
+	graphics.createTexture("Sprites/Fruit.bmp", 'f');			//Red Fruit
+	graphics.createTexture("Sprites/SpecialFruit.bmp", 'b');	//Blue Special Fruit
 
 	//Texts
 	graphics.createText("Start Game", 85, 's');
