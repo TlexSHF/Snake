@@ -6,15 +6,15 @@
 struct Cell {
 public:
 	char getType();
-	char getPrevType();
 	void setType(char t);
+	bool hasChanged();
 
 	friend std::ostream& operator<<(std::ostream& os, Cell& c) {
 		return os << c.type;
 	}
 private:
-	char type = '0';
-	char prevType = type;
+	char type = 0;
+	bool changed = true;
 };
 
 #endif

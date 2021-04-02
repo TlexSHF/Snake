@@ -4,7 +4,7 @@ Snake::Snake(unsigned x, unsigned y, size_t boardSize) :
 	boardSize(boardSize) {
 
 	limbs.emplace_back(x, y);
-	//limbs.emplace_back(x - 1, y); //are we gonna have two or nah?
+	//limbs.emplace_back(x - 1, y);
 }
 
 void Snake::update(int x, int y) {
@@ -13,13 +13,14 @@ void Snake::update(int x, int y) {
 
 		size_t size = limbs.size();
 		for (int i = size - 1; i > 0; i--) {
-			//Setting parts with the coords of the one before
+			//Setting tail parts with the coords of the one before
 			limbs[i].setCoords(
 				limbs[i - 1].getX(), 
 				limbs[i - 1].getY()
 			);
 		}
 
+		//Setting snake head
 		//Cannot go outside of board border (0-size)
 		if (x >= boardSize) {
 			limbs[0].setCoords(0, y);
@@ -57,14 +58,29 @@ void Snake::moveLeft() {
 	update(getX() - 1, getY());
 }
 
-void Snake::addLimb() {
-	//Generates a tail on the position of the last tail/head, 
-	// then later moves on with the rest
+void Snake::prepareNewLimb() {
+	//Generates a tail on the position of the last tail/head
 	size_t size = limbs.size();
-	limbs.emplace_back(
+	newLimb = std::make_unique<Coords>(
 		limbs[size - 1].getX(),
 		limbs[size - 1].getY()
-	);
+		);
+}
+
+void Snake::addLimb() {
+
+	size_t size = limbs.size();
+	if (hasNewLimb()) {
+		limbs.emplace_back(
+			newLimb->getX(),
+			newLimb->getY()
+		);
+		newLimb = nullptr;
+	}
+}
+
+unsigned Snake::getSize() {
+	return limbs.size();
 }
 
 int Snake::getX() { //MAKE SURE THAT THERE ARE NO WAYS THE LIMBS VECTOR CAN BE 0
@@ -73,4 +89,8 @@ int Snake::getX() { //MAKE SURE THAT THERE ARE NO WAYS THE LIMBS VECTOR CAN BE 0
 
 int Snake::getY() {
 	return limbs[0].getY();
+}
+
+bool Snake::hasNewLimb() {
+	return newLimb.get() != nullptr;
 }

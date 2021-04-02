@@ -53,7 +53,7 @@ void GraphicsManager::readyTexture(char indexTag, unsigned x, unsigned y, size_t
 	coords.w = m_baseWidth / gridSize;
 	coords.h = m_baseHeight / gridSize;
 
-	renderCopy(indexTag, coords);
+	renderCopy(indexTag, coords, false);
 }
 
 void GraphicsManager::readyTexture(char indexTag, double xPercent, double yPercent, double wPercent, double hPercent) {
@@ -64,7 +64,38 @@ void GraphicsManager::readyTexture(char indexTag, double xPercent, double yPerce
 	coords.w = m_windowWidth * (wPercent / 100);
 	coords.h = m_windowHeight * (hPercent / 100);
 
-	renderCopy(indexTag, coords);
+	renderCopy(indexTag, coords, false);
+}
+
+void GraphicsManager::readyText(char indexTag, double xPercent, double yPercent) {
+	
+	SDL_Rect coords;
+	coords.x = m_windowWidth * (xPercent / 100);
+	coords.y = m_windowHeight * (yPercent / 100);
+
+	renderCopy(indexTag, coords, true);
+}
+
+void GraphicsManager::createText(std::string text, size_t size, char tag) {
+
+	TTF_Font* font = TTF_OpenFont("Fonts/NewTegomin-Regular.ttf", size);
+
+	if (font == nullptr) {
+		std::cerr << "Failed to load font: "
+			<< SDL_GetError() << std::endl;
+		SDL_DestroyRenderer(m_renderer);
+		SDL_DestroyWindow(m_window);
+		SDL_Quit();
+
+	} else {
+
+		SDL_Color color = { 0, 120, 0 };
+		SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+		SDL_FreeSurface(surface);
+
+		m_texts.emplace_back(texture, tag);
+	}
 }
 
 void GraphicsManager::renderGraphics() {
@@ -80,12 +111,8 @@ std::vector<TexturePair> GraphicsManager::getTextures() {
 	return m_textures;
 }
 
-unsigned GraphicsManager::getBaseWidth() {
-	return m_baseWidth;
-}
-
-unsigned GraphicsManager::getBaseHeight() {
-	return m_baseHeight;
+std::vector<TexturePair> GraphicsManager::getTexts() {
+	return m_texts;
 }
 
 
@@ -126,18 +153,37 @@ int GraphicsManager::createRenderer() {
 	return OK;
 }
 
-void GraphicsManager::renderCopy(char indexTag, SDL_Rect& coords) {
-	unsigned size = m_textures.size();
+void GraphicsManager::renderCopy(char indexTag, SDL_Rect& coords, bool isText) {
+	size_t size;
+	std::vector<TexturePair> vec;
+	int textW = 0;
+	int textH = 0;
+
+	if (isText) {
+		size = m_texts.size();
+		vec = m_texts;
+	} else {
+		size = m_textures.size();
+		vec = m_textures;
+	}
+
 	for (int i = 0; i < size; i++) {
 
-		if (m_textures[i].tag == indexTag) {
+		if (vec[i].tag == indexTag) {
+			if (isText) {
+				SDL_QueryTexture(vec[i].texture, NULL, NULL, &textW, &textH);
+				coords.w = textW;
+				coords.h = textH;
+			}
+
 			SDL_RenderCopy(
 				m_renderer,
-				m_textures[i].texture,
+				vec[i].texture,
 				nullptr,
 				&coords
 			);
 			break;
 		}
 	}
+	
 }

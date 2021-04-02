@@ -1,14 +1,20 @@
 #include "Cell.h"
 
+#include <iostream> //take away
+
 char Cell::getType() {
     return type;
 }
 
-char Cell::getPrevType() {
-    return prevType;
+void Cell::setType(char t) {
+    if (type != t) {
+        changed = true;
+        type = t; 
+    } else {
+        changed = false;
+    }
 }
 
-void Cell::setType(char t) {
-    prevType = type;
-    type = t;
+bool Cell::hasChanged() {
+    return changed;
 }

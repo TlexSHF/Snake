@@ -15,7 +15,7 @@ public:
 	void menu();
 private:
 	InputManager& inputManager;
-	Matrix<10> matrix;
+	Matrix<8> matrix;
 	GraphicsManager graphics;
 	std::chrono::high_resolution_clock time;
 	size_t windowSize;
@@ -27,6 +27,8 @@ private:
 	void gameOver();
 
 	void renderGameMargin();
+	unsigned extractDigit(unsigned number, unsigned exponent);
+	void clearStats();
 	void updateMatrix();
 	void fillTextureBank();
 };

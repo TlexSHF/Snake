@@ -18,6 +18,8 @@ public:
 	bool isGameOver();
 	bool isSpecialSnake();
 	unsigned getSpecialFruits();
+	size_t getSize();
+	size_t getSnakeSize();
 
 	/* Updating */
 	void updateBoard();
@@ -61,7 +63,6 @@ private:
 
 	/* Creations */
 	void createWalls();
-	void createSnake();
 	void newFruit(Coords& fruit);
 	bool canSpawnSpecial();
 
@@ -81,7 +82,7 @@ inline Matrix<size>::Matrix() :
 	matrix(),
 	snake(4, 6, size), //THESE CAN NOT BE HARDCODED
 	fruit(5, 6),
-	specialFruit(7, 8) { //THESE CAN NOT BE HARDCODED
+	specialFruit(2, 3) { //THESE CAN NOT BE HARDCODED
 
 	srand(time(NULL)); //init psuedo random number
 
@@ -110,7 +111,21 @@ inline unsigned Matrix<size>::getSpecialFruits() {
 }
 
 template<size_t size>
+inline size_t Matrix<size>::getSize() {
+	return size;
+}
+
+template<size_t size>
+inline size_t Matrix<size>::getSnakeSize() {
+	return snake.getSize();
+}
+
+template<size_t size>
 void Matrix<size>::updateBoard() {
+	//placing possible new limb
+	if (snake.hasNewLimb()) {
+		snake.addLimb();
+	}
 
 	//Snake can only be special for a couple of moves
 	//If special snake, it will not collide
@@ -182,17 +197,13 @@ template<size_t size>
 void Matrix<size>::createWalls() {
 	//Gathering coords of each direction 
 	// around the edges
-	for (int i = 0; i < size; i++) { //TODO: This has double wall on top right, left and bottom left
+	size_t max = size - 1;
+	for (int i = 0; i < max; i++) {
 		walls.emplace_back(i, 0);
-		walls.emplace_back(i, size - 1);
-		walls.emplace_back(0, i);
-		walls.emplace_back(size - 1, i);
+		walls.emplace_back(max, i);
+		walls.emplace_back(max - i, max);
+		walls.emplace_back(0, max - i);
 	}
-}
-
-template<size_t size>
-inline void Matrix<size>::createSnake() {
-	matrix[snake.getY()][snake.getX()].setType('s');
 }
 
 template<size_t size>
@@ -243,10 +254,15 @@ void Matrix<size>::updateWalls() {
 
 template<size_t size>
 void Matrix<size>::updateSnake() {
-	for (auto limb : snake.getLimbs()) {
-		matrix[limb.getY()][limb.getX()].setType('s');
+	unsigned snakeSize = snake.getSize();
+	auto limbs = snake.getLimbs();
+
+	//updating head
+	matrix[snake.getY()][snake.getX()].setType('h');
+	//updating tail
+	for (int i = 1; i < snakeSize; i++) {
+		matrix[limbs[i].getY()][limbs[i].getX()].setType('s');
 	}
-	matrix[snake.getY()][snake.getX()].setType('h'); //Very sloppy code. Writes over once
 }
 
 template<size_t size>
@@ -259,7 +275,8 @@ inline void Matrix<size>::updateFruit() {
 
 template<size_t size>
 inline void Matrix<size>::eatFruit() {
-	snake.addLimb();
+	//snake.addLimb();
+	snake.prepareNewLimb();
 	newFruit(fruit);
 }
 
