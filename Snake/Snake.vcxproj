@@ -157,6 +157,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Snake.h" />
+    <ClInclude Include="TextTexture.h" />
     <ClInclude Include="TexturePair.h" />
   </ItemGroup>
   <ItemGroup>

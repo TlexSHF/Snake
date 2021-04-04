@@ -1,13 +1,14 @@
 #ifndef GAME_H
 #define GAME_H
 
-//#include <SDL_ttf.h> Litt mye styr for å legge til en font men kanskje jeg gjør det senere
 #include <iostream>
 #include <chrono>
+#include <string>
 #include "InputManager.h"
 #include "Matrix.h"
 #include "GraphicsManager.h"
 #include "Direction.h"
+#include "Coords.h"
 
 class Game {
 public:
@@ -23,6 +24,8 @@ private:
 	bool running;
 	double speed;
 
+	unsigned score;
+
 	void start();
 	void gameOver();
 
@@ -31,6 +34,8 @@ private:
 	void clearStats();
 	void updateMatrix();
 	void fillTextureBank();
+
+	bool mouseInsideArea(SDL_Rect rectangle);
 };
 
 #endif

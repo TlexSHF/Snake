@@ -5,8 +5,7 @@
 
 struct TexturePair {
 	TexturePair(SDL_Texture* texture, char tag) :
-		texture(texture), tag(tag)
-	{}
+		texture(texture), tag(tag) {}
 
 	SDL_Texture* texture;
 	char tag;

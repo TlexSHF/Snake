@@ -66,18 +66,19 @@ private:
 	void createWalls();
 	void createTempWall();
 	void newRdmCoords(Coords & c);
-	bool canSpawnSpecial();
+	bool possibleSpawn();
 
 	void breakTempWall(unsigned x, unsigned y);
 
 	/* Updating objects */
 	void emptyBoard();
 	void updateWalls();
+	void updateTempWalls();
 	void updateSnake();
 	void updateFruit();
 
-	void setCell(Coords c, char type);
-	char getCell(Coords c);
+	void setCellType(Coords c, char type);
+	char getCellType(Coords c);
 
 	/* Actions */
 	void eatFruit();
@@ -98,7 +99,7 @@ inline Matrix<size>::Matrix() :
 
 	newRdmCoords(snake.getLimbs()[0]); //TODO This doesn't do much it seems.
 	newRdmCoords(fruit);
-	setCell(fruit, 'f');
+	setCellType(fruit, 'f');
 
 	updateBoard();
 }
@@ -157,6 +158,10 @@ void Matrix<size>::updateBoard() {
 	if (specialFruit == snake.getLimbs()[0])
 		eatSpecial();
 
+	if(possibleSpawn())
+		createTempWall();
+
+	updateTempWalls();
 	updateSnake();
 	updateFruit();
 	updateWalls(); //TODO: find a way to not call this each time
@@ -165,7 +170,7 @@ void Matrix<size>::updateBoard() {
 template<size_t size>
 inline void Matrix<size>::checkCollision() {
 
-	char cellType = getCell(snake.getLimbs().front());
+	char cellType = getCellType(snake.getLimbs().front());
 
 	if (!specialSnake) {
 		if (cellType == 'w' || cellType == 's' || cellType == 't') {
@@ -178,45 +183,33 @@ inline void Matrix<size>::checkCollision() {
 			breakTempWall(snake.getX(), snake.getY());
 		}
 	}
-
-	/*if(cellType == 'w' || cellType == 's') {
-		gameOver = true;
-
-	} else if (cellType == 't' && !specialSnake) {
-		gameOver = true;
-	} else if (cellType == 't' && specialSnake) {
-		breakTempWall(snake.getX(), snake.getY()); //If special, can break walls
-	}
-
-	if(gameOver == true)
-		std::cout << "Snake Crashed. Game Over!" << std::endl;*/
 }
 
 template<size_t size>
 inline void Matrix<size>::moveUp() {
 	//Removing the last tail part
-	setCell(snake.getLimbs().back(), '0');
+	setCellType(snake.getLimbs().back(), '0');
 	snake.moveUp();
 	updateBoard();
 }
 
 template<size_t size>
 inline void Matrix<size>::moveDown() {
-	setCell(snake.getLimbs().back(), '0');
+	setCellType(snake.getLimbs().back(), '0');
 	snake.moveDown();
 	updateBoard();
 }
 
 template<size_t size>
 inline void Matrix<size>::moveRight() {
-	setCell(snake.getLimbs().back(), '0');
+	setCellType(snake.getLimbs().back(), '0');
 	snake.moveRight();
 	updateBoard();
 }
 
 template<size_t size>
 inline void Matrix<size>::moveLeft() {
-	setCell(snake.getLimbs().back(), '0');
+	setCellType(snake.getLimbs().back(), '0');
 	snake.moveLeft();
 	updateBoard();
 }
@@ -271,15 +264,10 @@ void Matrix<size>::newRdmCoords(Coords& c) {
 }
 
 template<size_t size>
-bool Matrix<size>::canSpawnSpecial() {
+bool Matrix<size>::possibleSpawn() {
 	//sannsynlighet for å spawne en special fruit
 	unsigned possibility = rand() % 25;
-	if (possibility == 1 && visibleSpecial == false) {
-		visibleSpecial = true;
-		return true;
-	} else {
-		return false;
-	}
+	return possibility == 1;
 }
 
 template<size_t size>
@@ -291,11 +279,6 @@ inline void Matrix<size>::breakTempWall(unsigned x, unsigned y) {
 			break;
 		}
 	}
-	/*for (int i = 0; i < tempWalls.size(); i++) {
-		if (tempWalls[i].getX() == x && tempWalls[i].getY() == y) {
-			tempWalls.erase(tempWalls[i]);
-		}
-	}*/
 }
 
 template<size_t size>
@@ -308,12 +291,16 @@ void Matrix<size>::emptyBoard() {
 }
 
 template<size_t size>
-void Matrix<size>::updateWalls() {
+inline void Matrix<size>::updateWalls() {
 	for (auto wall : walls) {
-		setCell(wall, 'w');
+		setCellType(wall, 'w');
 	}
+}
+
+template<size_t size>
+inline void Matrix<size>::updateTempWalls() {
 	for (auto wall : tempWalls) {
-		setCell(wall, 't');
+		setCellType(wall, 't');
 	}
 }
 
@@ -323,32 +310,31 @@ void Matrix<size>::updateSnake() {
 
 	//updating head
 	//if (getCell(limbs.front()) != 'w')
-		setCell(limbs.front(), 'h');
+		setCellType(limbs.front(), 'h');
 
 	//updating first tail
 	if(limbs.size() > 1 /*&& getCell(limbs[1]) != 'w'*/)
-		setCell(limbs[1], 's');
+		setCellType(limbs[1], 's');
 }
 
 template<size_t size>
 inline void Matrix<size>::updateFruit() {
 	//matrix[fruit.getY()][fruit.getX()].setType('f');
 
-	if (canSpawnSpecial()) {
+	if (possibleSpawn() && visibleSpecial == false) {
 		newRdmCoords(specialFruit);
 		visibleSpecial = true;
-		setCell(specialFruit, 'b');
-		createTempWall();
+		setCellType(specialFruit, 'b');
 	}
 }
 
 template<size_t size>
-inline void Matrix<size>::setCell(Coords c, char type) {
+inline void Matrix<size>::setCellType(Coords c, char type) {
 	matrix[c.getY()][c.getX()].setType(type);
 }
 
 template<size_t size>
-inline char Matrix<size>::getCell(Coords c) {
+inline char Matrix<size>::getCellType(Coords c) {
 	return matrix[c.getY()][c.getX()].getType();
 }
 
@@ -356,9 +342,9 @@ template<size_t size>
 inline void Matrix<size>::eatFruit() {
 	snake.prepareNewLimb();
 	 
-	setCell(fruit, '0');
+	setCellType(fruit, '0');
 	newRdmCoords(fruit);
-	setCell(fruit, 'f');
+	setCellType(fruit, 'f');
 }
 
 template<size_t size>
@@ -368,7 +354,7 @@ inline void Matrix<size>::eatSpecial() {
 		specialFruits++;
 	
 	visibleSpecial = false;
-	setCell(specialFruit, '0');
+	setCellType(specialFruit, '0');
 }
 
 #endif

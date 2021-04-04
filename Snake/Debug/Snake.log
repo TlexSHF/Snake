@@ -1,15 +1,23 @@
 ﻿  Game.cpp
-C:\Users\simon\source\repos\Snake\Snake\Game.cpp(162,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\simon\source\repos\Snake\Snake\Game.cpp(199,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(94,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(88): message : while compiling class template member function 'Matrix<10>::Matrix(void)'
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(168,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(210,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(95,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(89): message : while compiling class template member function 'Matrix<10>::Matrix(void)'
 C:\Users\simon\source\repos\Snake\Snake\Game.cpp(6): message : see reference to function template instantiation 'Matrix<10>::Matrix(void)' being compiled
-C:\Users\simon\source\repos\Snake\Snake\Game.h(18): message : see reference to class template instantiation 'Matrix<10>' being compiled
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(236,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(232): message : while compiling class template member function 'void Matrix<10>::createWalls(void)'
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(97): message : see reference to function template instantiation 'void Matrix<10>::createWalls(void)' being compiled
-C:\Users\simon\source\repos\Snake\Snake\Matrix.h(88): message : while compiling class template member function 'Matrix<10>::Matrix(void)'
+C:\Users\simon\source\repos\Snake\Snake\Game.h(19): message : see reference to class template instantiation 'Matrix<10>' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(229,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(225): message : while compiling class template member function 'void Matrix<10>::createWalls(void)'
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(98): message : see reference to function template instantiation 'void Matrix<10>::createWalls(void)' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(89): message : while compiling class template member function 'Matrix<10>::Matrix(void)'
 C:\Users\simon\source\repos\Snake\Snake\Game.cpp(6): message : see reference to function template instantiation 'Matrix<10>::Matrix(void)' being compiled
+  GraphicsManager.cpp
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(62,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(63,28): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(64,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(65,28): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(167,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(168,28): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(184,20): warning C4018: '<': signed/unsigned mismatch
   main.cpp
   Generating Code...
   Snake.vcxproj -> C:\Users\simon\source\repos\Snake\Debug\Snake.exe

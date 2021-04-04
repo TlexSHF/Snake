@@ -56,7 +56,7 @@ void GraphicsManager::readyTexture(char indexTag, unsigned x, unsigned y, size_t
 	renderCopy(indexTag, coords, false);
 }
 
-void GraphicsManager::readyTexture(char indexTag, double xPercent, double yPercent, double wPercent, double hPercent) {
+SDL_Rect GraphicsManager::readyTexture(char indexTag, double xPercent, double yPercent, double wPercent, double hPercent) {
 
 	SDL_Rect coords;
 	coords.x = m_windowWidth * (xPercent / 100);
@@ -65,36 +65,18 @@ void GraphicsManager::readyTexture(char indexTag, double xPercent, double yPerce
 	coords.h = m_windowHeight * (hPercent / 100);
 
 	renderCopy(indexTag, coords, false);
+	return coords;
 }
 
-void GraphicsManager::readyText(char indexTag, double xPercent, double yPercent) {
-	
-	SDL_Rect coords;
-	coords.x = m_windowWidth * (xPercent / 100);
-	coords.y = m_windowHeight * (yPercent / 100);
+void GraphicsManager::writeText(std::string text, double xPercent, double yPercent, size_t size) {
+	int textIndex = existsInTexts(text, size);
 
-	renderCopy(indexTag, coords, true);
-}
-
-void GraphicsManager::createText(std::string text, size_t size, char tag) {
-
-	TTF_Font* font = TTF_OpenFont("Fonts/NewTegomin-Regular.ttf", size);
-
-	if (font == nullptr) {
-		std::cerr << "Failed to load font: "
-			<< SDL_GetError() << std::endl;
-		SDL_DestroyRenderer(m_renderer);
-		SDL_DestroyWindow(m_window);
-		SDL_Quit();
-
+	if (textIndex == -1) {
+		//Text not found, creating new
+		createText(text, size);
+		readyText(m_texts.back().texture, xPercent, yPercent);
 	} else {
-
-		SDL_Color color = { 0, 120, 0 };
-		SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
-		SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-		SDL_FreeSurface(surface);
-
-		m_texts.emplace_back(texture, tag);
+		readyText(m_texts[textIndex].texture, xPercent, yPercent);
 	}
 }
 
@@ -111,7 +93,7 @@ std::vector<TexturePair> GraphicsManager::getTextures() {
 	return m_textures;
 }
 
-std::vector<TexturePair> GraphicsManager::getTexts() {
+std::vector<TextTexture> GraphicsManager::getTexts() {
 	return m_texts;
 }
 
@@ -153,32 +135,60 @@ int GraphicsManager::createRenderer() {
 	return OK;
 }
 
-void GraphicsManager::renderCopy(char indexTag, SDL_Rect& coords, bool isText) {
-	size_t size;
-	std::vector<TexturePair> vec;
+void GraphicsManager::createText(std::string text, size_t size) {
+
+	TTF_Font* font = TTF_OpenFont("Fonts/NewTegomin-Regular.ttf", size);
+
+	if (font == nullptr) {
+		std::cerr << "Failed to load font: "
+			<< SDL_GetError() << std::endl;
+		SDL_DestroyRenderer(m_renderer);
+		SDL_DestroyWindow(m_window);
+		SDL_Quit();
+
+	} else {
+
+		SDL_Color color = { 0, 120, 0 };
+		SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+		SDL_FreeSurface(surface);
+
+		m_texts.emplace_back(text, size, texture);
+	}
+}
+
+void GraphicsManager::readyText(SDL_Texture* texture, double xPercent, double yPercent) {
 	int textW = 0;
 	int textH = 0;
 
-	if (isText) {
-		size = m_texts.size();
-		vec = m_texts;
-	} else {
-		size = m_textures.size();
-		vec = m_textures;
-	}
+	SDL_QueryTexture(texture, NULL, NULL, &textW, &textH);
+
+	SDL_Rect coords;
+	coords.x = m_windowWidth * (xPercent / 100);
+	coords.y = m_windowHeight * (yPercent / 100);
+	coords.w = textW;
+	coords.h = textH;
+
+	//Render
+	SDL_RenderCopy(
+		m_renderer,
+		texture,
+		nullptr,
+		&coords
+	);
+}
+
+void GraphicsManager::renderCopy(char indexTag, SDL_Rect& coords, bool isText) {
+	size_t size = m_textures.size();
 
 	for (int i = 0; i < size; i++) {
 
-		if (vec[i].tag == indexTag) {
-			if (isText) {
-				SDL_QueryTexture(vec[i].texture, NULL, NULL, &textW, &textH);
-				coords.w = textW;
-				coords.h = textH;
-			}
+		if (m_textures[i].tag == indexTag) {
+			
 
 			SDL_RenderCopy(
 				m_renderer,
-				vec[i].texture,
+				m_textures[i].texture,
 				nullptr,
 				&coords
 			);
@@ -186,4 +196,14 @@ void GraphicsManager::renderCopy(char indexTag, SDL_Rect& coords, bool isText) {
 		}
 	}
 	
+}
+
+int GraphicsManager::existsInTexts(std::string text, size_t size) {
+	int textsSize = m_texts.size();
+	for (int i = 0; i < textsSize; i++) {
+		if (m_texts[i].text == text && m_texts[i].size == size) {
+			return i;
+		}
+	}
+	return -1;
 }

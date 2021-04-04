@@ -21,10 +21,10 @@ void Game::menu() {
 
 	graphics.clearScreen();
 	graphics.readyTexture('g', 0, 0, 100, 100);
-	graphics.readyTexture('x', 10, 20, 80, 20);
-	graphics.readyTexture('x', 10, 50, 80, 20);
-	graphics.readyText('s', 15, 25);
-	graphics.readyText('l', 15, 55);
+	SDL_Rect txtBox1 = graphics.readyTexture('x', 10, 20, 80, 20);
+	SDL_Rect txtBox2 = graphics.readyTexture('x', 10, 50, 80, 20);
+	graphics.writeText("Start Game", 15, 25, 85);
+	graphics.writeText("Leaderboard", 15, 55, 85);
 	graphics.renderGraphics();
 
 	
@@ -42,10 +42,18 @@ void Game::menu() {
 		}
 
 		/* Actions */
-		if (inputManager.keyDown(SDL_SCANCODE_1)) {
-			renderGameMargin();
-			start();
-			menu = false;
+
+		if (inputManager.mouseDown(SDL_BUTTON_LEFT)) {
+
+			if (mouseInsideArea(txtBox1)) {
+				renderGameMargin();
+				start();
+				menu = false;
+			}
+
+			if (mouseInsideArea(txtBox2)) {
+				std::cout << "INSIDE 2" << std::endl;
+			}
 		}
 	}
 }
@@ -55,8 +63,6 @@ void Game::start() {
 
 	Direction newDir = Direction::up;
 	Direction direction = newDir;
-
-	//Have taken away renderclear. This might cause issues? <<<----
 	
 	auto timeCount = time.now();
 
@@ -148,7 +154,7 @@ void Game::renderGameMargin() {
 	
 	graphics.clearScreen();
 	graphics.readyTexture('g', 0, 0, 100, 100);
-	graphics.readyText('c', 50, 5);
+	graphics.writeText("Score: ", 50, 5, 60);
 	graphics.renderGraphics();
 }
 
@@ -170,7 +176,12 @@ void Game::updateMatrix() {
 	size_t size = matrix.getSize();
 	bool specialSnake = matrix.isSpecialSnake();
 	unsigned specialFruits = matrix.getSpecialFruits();
-	unsigned snakeSize = matrix.getSnakeSize();
+
+	score = matrix.getSnakeSize() - 1;
+	//Every 5 score speed gets quicker
+	if (score != 0 && score % 5 == 0) {
+		speed -= 0.002;
+	}
 
 	if (specialSnake)
 		specialColor = !specialColor;
@@ -200,9 +211,9 @@ void Game::updateMatrix() {
 		graphics.readyTexture('b', i, size + 1, size);
 	}
 
-	graphics.readyText('0' + extractDigit(snakeSize - 1, 2), 70, 5);
-	graphics.readyText('0' + extractDigit(snakeSize - 1, 1), 75, 5);
-	graphics.readyText('0' + extractDigit(snakeSize - 1, 0), 80, 5);
+	graphics.writeText(std::to_string(extractDigit(score, 2)), 70, 5, 60);
+	graphics.writeText(std::to_string(extractDigit(score, 1)), 75, 5, 60);
+	graphics.writeText(std::to_string(extractDigit(score, 0)), 80, 5, 60);
 }
 
 void Game::fillTextureBank() {
@@ -221,21 +232,16 @@ void Game::fillTextureBank() {
 	graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');	//Inverted Tail
 	graphics.createTexture("Sprites/Fruit.bmp", 'f');			//Red Fruit
 	graphics.createTexture("Sprites/SpecialFruit.bmp", 'b');	//Blue Special Fruit
+}
 
-	//Texts
-	graphics.createText("Start Game", 85, 's');
-	graphics.createText("Leaderboard", 85, 'l');
-	graphics.createText("Score: ", 60, 'c');
-
-	//Numbers
-	graphics.createText("0", 60, '0');
-	graphics.createText("1", 60, '1');
-	graphics.createText("2", 60, '2');
-	graphics.createText("3", 60, '3');
-	graphics.createText("4", 60, '4');
-	graphics.createText("5", 60, '5');
-	graphics.createText("6", 60, '6');
-	graphics.createText("7", 60, '7');
-	graphics.createText("8", 60, '8');
-	graphics.createText("9", 60, '9');
+bool Game::mouseInsideArea(SDL_Rect rectangle) {
+	int x = inputManager.getMouseX();
+	int y = inputManager.getMouseY();
+	
+	return (
+		x >= rectangle.x && 
+		x <= rectangle.x + rectangle.w &&
+		y >= rectangle.y && 
+		y <= rectangle.y + rectangle.h
+	);
 }
