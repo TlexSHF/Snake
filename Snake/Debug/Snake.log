@@ -1,1 +1,17 @@
-﻿  Snake.vcxproj -> C:\Users\simon\source\repos\Snake\Debug\Snake.exe
+﻿  Game.cpp
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(213,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(97,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(91): message : while compiling class template member function 'snake::Matrix<10>::Matrix(void)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\memory(2833): message : see reference to function template instantiation 'snake::Matrix<10>::Matrix(void)' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(110): message : while compiling class template member function 'std::array<std::array<snake::Cell,10>,10> snake::Matrix<10>::getLayout(void)'
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(179): message : see reference to function template instantiation 'std::array<std::array<snake::Cell,10>,10> snake::Matrix<10>::getLayout(void)' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(85): message : see reference to class template instantiation 'snake::Matrix<10>' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(213,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(209): message : while compiling class template member function 'void snake::Matrix<10>::createWalls(void)'
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(100): message : see reference to function template instantiation 'void snake::Matrix<10>::createWalls(void)' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(91): message : while compiling class template member function 'snake::Matrix<10>::Matrix(void)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\memory(2833): message : see reference to function template instantiation 'snake::Matrix<10>::Matrix(void)' being compiled
+  main.cpp
+  Generating Code...
+  LINK : C:\Users\simon\source\repos\Snake\Debug\Snake.exe not found or not built by the last incremental link; performing full link
+  Snake.vcxproj -> C:\Users\simon\source\repos\Snake\Debug\Snake.exe

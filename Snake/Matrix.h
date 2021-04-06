@@ -1,3 +1,4 @@
+
 #ifndef MATRIX_H
 #define MATRIX_H
 
@@ -50,13 +51,13 @@ namespace snake {
 			return os;
 		}
 
-	private: //TODO: MOVING ALL THAT IS NOT GAME LOGIC, AND IS ONLY THINGS ON A MATRIX, TO A SEPARATE MATRIX CLASS
-		std::array<std::array<Cell, size>, size> matrix; //Can be moved to new matrix class
-		std::vector<Coords> walls;	//Can be moved to new matrix class
-		std::vector<Coords> tempWalls; //Can be moved to new matrix class
-		Snake snake; //Can be moved to new matrix class
-		Coords fruit; //Can be moved to new matrix class
-		Coords specialFruit; //Can be moved to new matrix class
+	private:
+		std::array<std::array<Cell, size>, size> matrix;
+		std::vector<Coords> walls;
+		std::vector<Coords> tempWalls;
+		Snake snake;
+		Coords fruit;
+		Coords specialFruit;
 		unsigned specialFruits = 0;
 		bool specialSnake = false;
 		bool visibleSpecial = false;
@@ -64,19 +65,19 @@ namespace snake {
 		unsigned timesSpecial = 0;
 
 		/* Creations */
-		void createWalls(); //Can be moved to new matrix class
-		void createTempWall(); //Can be moved to new matrix class
-		void newRdmCoords(Coords& c); //Can be moved to new matrix class
-		bool possibleSpawn(); 
+		void createWalls();
+		void createTempWall();
+		void newRdmCoords(Coords& c);
+		bool spawnPossible(); 
 
-		void breakTempWall(unsigned x, unsigned y); //Can be moved to new matrix class
+		void breakTempWall(unsigned x, unsigned y);
 
 		/* Updating objects */
-		void emptyBoard(); //Can be moved to new matrix class
-		void updateWalls(); //Can be moved to new matrix class
-		void updateTempWalls(); //Can be moved to new matrix class
-		void updateSnake(); //Can be moved to new matrix class
-		void updateFruit(); //Can be moved to new matrix class
+		void emptyBoard();
+		void updateWalls();
+		void updateTempWalls();
+		void updateSnake();
+		void updateFruit();
 
 		void setCellType(Coords c, char type);
 		char getCellType(Coords c);
@@ -160,7 +161,7 @@ namespace snake {
 		if (specialFruit == snake.getLimbs()[0])
 			eatSpecial();
 
-		if (possibleSpawn())
+		if (spawnPossible())
 			createTempWall();
 
 		updateTempWalls();
@@ -248,8 +249,7 @@ namespace snake {
 	}
 
 	template<size_t size>
-	bool Matrix<size>::possibleSpawn() {
-		//sannsynlighet for å spawne en special fruit
+	bool Matrix<size>::spawnPossible() {
 		unsigned possibility = rand() % 25;
 		return possibility == 1;
 	}
@@ -305,7 +305,7 @@ namespace snake {
 	inline void Matrix<size>::updateFruit() {
 		//matrix[fruit.getY()][fruit.getX()].setType('f');
 
-		if (possibleSpawn() && visibleSpecial == false) {
+		if (spawnPossible() && visibleSpecial == false) {
 			newRdmCoords(specialFruit);
 			visibleSpecial = true;
 			setCellType(specialFruit, 'b');
@@ -351,7 +351,7 @@ namespace snake {
 
 	template<size_t size>
 	inline void Matrix<size>::eatSpecial() {
-		//Kan maksimalt samle på 8 speical fruits
+		//Maximum of 8 special fruits gathered
 		if (specialFruits <= 8)
 			specialFruits++;
 
