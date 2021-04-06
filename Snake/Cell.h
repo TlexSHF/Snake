@@ -3,18 +3,21 @@
 
 #include <ostream>
 
-struct Cell {
-public:
-	char getType();
-	void setType(char t);
-	bool hasChanged();
+namespace snake {
 
-	friend std::ostream& operator<<(std::ostream& os, Cell& c) {
-		return os << c.type;
-	}
-private:
-	char type = 0;
-	bool changed = true;
-};
+	struct Cell {
+	public:
+		char getType();
+		void setType(char t);
+		bool hasChanged();
+
+		friend std::ostream& operator<<(std::ostream& os, Cell& c) {
+			return os << c.type;
+		}
+	private:
+		char type = 0;
+		bool changed = true;
+	};
+}
 
 #endif

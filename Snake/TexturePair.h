@@ -3,12 +3,15 @@
 
 #include <SDL.h>
 
-struct TexturePair {
-	TexturePair(SDL_Texture* texture, char tag) :
-		texture(texture), tag(tag) {}
+namespace snake {
 
-	SDL_Texture* texture;
-	char tag;
-};
+	struct TexturePair {
+		TexturePair(SDL_Texture* texture, char tag) :
+			texture(texture), tag(tag) {}
+
+		SDL_Texture* texture;
+		char tag;
+	};
+}
 
 #endif

@@ -1,20 +1,23 @@
 #include "Coords.h"
 
-Coords::Coords(unsigned x, unsigned y) : x(x), y(y) {}
+namespace snake {
 
-unsigned Coords::getX() {
-	return x;
-}
+	Coords::Coords(unsigned x, unsigned y) : x(x), y(y) {}
 
-unsigned Coords::getY() {
-	return y;
-}
+	unsigned Coords::getX() {
+		return x;
+	}
 
-void Coords::setCoords(unsigned x, unsigned y) {
-	this->x = x;
-	this->y = y;
-}
+	unsigned Coords::getY() {
+		return y;
+	}
 
-bool Coords::operator==(const Coords& other) {
-	return this->x == other.x && this->y == other.y;
+	void Coords::setCoords(unsigned x, unsigned y) {
+		this->x = x;
+		this->y = y;
+	}
+
+	bool Coords::operator==(const Coords& other) {
+		return this->x == other.x && this->y == other.y;
+	}
 }

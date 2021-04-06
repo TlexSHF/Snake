@@ -4,13 +4,16 @@
 #include <string>
 #include <SDL.h>
 
-struct TextTexture {
-	TextTexture(std::string text, size_t size, SDL_Texture* texture) :
-		text(text), size(size), texture(texture) {}
+namespace snake {
 
-	std::string text;
-	size_t size;
-	SDL_Texture* texture;
-};
+	struct TextTexture {
+		TextTexture(std::string text, size_t size, SDL_Texture* texture) :
+			text(text), size(size), texture(texture) {}
+
+		std::string text;
+		size_t size;
+		SDL_Texture* texture;
+	};
+}
 
 #endif;

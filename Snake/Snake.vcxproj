@@ -149,6 +149,7 @@
     <ClCompile Include="Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Board.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Coords.h" />
     <ClInclude Include="Direction.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="TextTexture.h" />
     <ClInclude Include="TexturePair.h" />

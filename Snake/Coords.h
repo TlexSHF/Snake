@@ -1,18 +1,21 @@
 #ifndef COORDS_H
 #define COORDS_H
 
-struct Coords {
-public:
-	Coords(unsigned x, unsigned y);
-	unsigned getX();
-	unsigned getY();
-	void setCoords(unsigned x, unsigned y);
+namespace snake {
 
-	bool operator==(const Coords& other);
+	struct Coords {
+	public:
+		Coords(unsigned x, unsigned y);
+		unsigned getX();
+		unsigned getY();
+		void setCoords(unsigned x, unsigned y);
 
-private:
-	unsigned x;
-	unsigned y;
-};
+		bool operator==(const Coords& other);
+
+	private:
+		unsigned x;
+		unsigned y;
+	};
+}
 
 #endif

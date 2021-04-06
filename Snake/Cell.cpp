@@ -2,19 +2,22 @@
 
 #include <iostream> //take away
 
-char Cell::getType() {
-    return type;
-}
+namespace snake {
 
-void Cell::setType(char t) {
-    if (type != t) {
-        changed = true;
-        type = t; 
-    } else {
-        changed = false;
+    char Cell::getType() {
+        return type;
     }
-}
 
-bool Cell::hasChanged() {
-    return changed;
+    void Cell::setType(char t) {
+        if (type != t) {
+            changed = true;
+            type = t;
+        } else {
+            changed = false;
+        }
+    }
+
+    bool Cell::hasChanged() {
+        return changed;
+    }
 }

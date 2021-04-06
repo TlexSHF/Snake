@@ -5,34 +5,37 @@
 #include <vector>
 #include "Coords.h"
 
-class Snake {
-public:
-	Snake(unsigned x, unsigned y, size_t boardSize);
+namespace snake {
 
-	void prepareNewLimb();
-	void addLimb();
+	class Snake {
+	public:
+		Snake(unsigned x, unsigned y, size_t boardSize);
 
-	/* Getters */
-	unsigned getSize();
-	int getX();
-	int getY();
-	bool hasNewLimb();
-	
-	std::vector<Coords> getLimbs();
+		void prepareNewLimb();
+		void addLimb();
 
-	/* Movement */
-	void moveUp();
-	void moveDown();
-	void moveRight();
-	void moveLeft();
+		/* Getters */
+		unsigned getSize();
+		int getX();
+		int getY();
+		bool hasNewLimb();
+
+		std::vector<Coords> getLimbs(); //TODO: Might rename all "limbs" to "segments"
+
+		/* Movement */
+		void moveUp();
+		void moveDown();
+		void moveRight();
+		void moveLeft();
 
 
-private:
-	std::vector<Coords> limbs;
-	std::unique_ptr<Coords> newLimb = nullptr;
-	int boardSize;
+	private:
+		std::vector<Coords> limbs;
+		std::unique_ptr<Coords> newLimb = nullptr;
+		int boardSize;
 
-	void update(int x, int y);
-};
+		void update(int x, int y);
+	};
+}
 
 #endif

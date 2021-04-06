@@ -12,48 +12,51 @@
 #include "TexturePair.h"
 #include "TextTexture.h"
 
-class GraphicsManager {
-public:
-	GraphicsManager(std::string name, size_t size, size_t margin);
-	GraphicsManager(std::string name, size_t width, size_t height, size_t margin);
-	~GraphicsManager();
+namespace snake {
 
-	//TODO: Make textures work like texts with dynamically adding vector
-	void createTexture(std::string image, char tag);
-	void readyTexture(char indexTag, unsigned x, unsigned y, size_t gridSize);
-	SDL_Rect readyTexture(char indexTag, double xPercent, double yPercent, double wPercent, double hPercent);
+	class GraphicsManager {
+	public:
+		GraphicsManager(std::string name, size_t size, size_t margin);
+		GraphicsManager(std::string name, size_t width, size_t height, size_t margin);
+		~GraphicsManager();
 
-	void writeText(std::string text, double xPercent, double yPercent, size_t size);
+		//TODO: Make textures work like texts with dynamically adding vector
+		void createTexture(std::string image, char tag);
+		void readyTexture(char indexTag, unsigned x, unsigned y, size_t gridSize);
+		SDL_Rect readyTexture(char indexTag, double xPercent, double yPercent, double wPercent, double hPercent);
 
-	void renderGraphics();
-	void clearScreen();
+		void writeText(std::string text, double xPercent, double yPercent, size_t size);
 
-	/* Getters */
-	std::vector<TexturePair> getTextures();
-	std::vector<TextTexture> getTexts();
+		void renderGraphics();
+		void clearScreen();
 
-private:
-	SDL_Window* m_window = nullptr;
-	SDL_Renderer* m_renderer = nullptr;
-	std::vector<TexturePair> m_textures;
-	//std::vector<TexturePair> m_texts;
-	std::vector<TextTexture> m_texts;
+		/* Getters */
+		std::vector<TexturePair> getTextures();
+		std::vector<TextTexture> getTexts();
 
-	std::string m_windowName;
-	size_t m_windowWidth;
-	size_t m_windowHeight;
-	size_t m_margin;
-	unsigned m_baseWidth;
-	unsigned m_baseHeight;
+	private:
+		SDL_Window* m_window = nullptr;
+		SDL_Renderer* m_renderer = nullptr;
+		std::vector<TexturePair> m_textures;
+		//std::vector<TexturePair> m_texts;
+		std::vector<TextTexture> m_texts;
 
-	bool m_exitFailure = false;
+		std::string m_windowName;
+		size_t m_windowWidth;
+		size_t m_windowHeight;
+		size_t m_margin;
+		unsigned m_baseWidth;
+		unsigned m_baseHeight;
 
-	int createWindow();
-	int createRenderer();
-	void createText(std::string text, size_t size);
-	void readyText(SDL_Texture* texture, double xPercent, double yPercent);
-	void renderCopy(char indexTag, SDL_Rect& coords, bool isText);
-	int existsInTexts(std::string text, size_t size);
-};
+		bool m_exitFailure = false;
+
+		int createWindow();
+		int createRenderer();
+		void createText(std::string text, size_t size);
+		void readyText(SDL_Texture* texture, double xPercent, double yPercent);
+		void renderCopy(char indexTag, SDL_Rect& coords, bool isText);
+		int existsInTexts(std::string text, size_t size);
+	};
+}
 
 #endif

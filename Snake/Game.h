@@ -2,40 +2,50 @@
 #define GAME_H
 
 #include <iostream>
+#include <fstream>
 #include <chrono>
 #include <string>
+#include <algorithm>
+#include <vector>
 #include "InputManager.h"
 #include "Matrix.h"
 #include "GraphicsManager.h"
 #include "Direction.h"
 #include "Coords.h"
+#include "Score.h"
 
-class Game {
-public:
-	Game(size_t size);
-	void menu();
-private:
-	InputManager& inputManager;
-	Matrix<10> matrix;
-	GraphicsManager graphics;
-	std::chrono::high_resolution_clock time;
-	size_t windowSize;
+namespace snake {
+	const size_t matrixSize = 10;
 
-	bool running;
-	double speed;
+	class Game {
+	public:
+		Game(size_t windowSize);
+		void menu();
+	private:
+		InputManager& inputManager;
+		std::unique_ptr<Matrix<matrixSize>> matrix;
+		GraphicsManager graphics;
 
-	unsigned score;
+		std::chrono::high_resolution_clock time;
+		size_t windowSize;
 
-	void start();
-	void gameOver();
+		double speed = 0;
+		unsigned score = 0;
 
-	void renderGameMargin();
-	unsigned extractDigit(unsigned number, unsigned exponent);
-	void clearStats();
-	void updateMatrix();
-	void fillTextureBank();
+		void start();
+		void gameOver();
 
-	bool mouseInsideArea(SDL_Rect rectangle);
-};
+		void renderGameMargin();
+		void clearStats();
+		void updateMatrix();
+		void fillTextureBank();
+
+		unsigned extractDigit(unsigned number, unsigned exponent);
+		bool mouseInsideArea(SDL_Rect rectangle); //TODO MOVED THIS DOWN ^
+
+		void leaderBoard();
+		void addNewScore(std::string name, unsigned score);
+	};
+}
 
 #endif
