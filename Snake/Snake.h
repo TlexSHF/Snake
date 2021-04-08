@@ -30,9 +30,9 @@ namespace snake {
 
 
 	private:
-		std::vector<Coords> limbs;
-		std::unique_ptr<Coords> newLimb = nullptr;
-		int boardSize;
+		std::vector<Coords> m_limbs;
+		std::unique_ptr<Coords> m_newLimb = nullptr;
+		int m_boardSize;
 
 		void update(int x, int y);
 	};

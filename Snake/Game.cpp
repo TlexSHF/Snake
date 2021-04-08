@@ -3,10 +3,10 @@
 namespace snake {
 
 	Game::Game(size_t windowSize) :
-		matrix(),
-		windowSize(windowSize),
-		inputManager(inputManager.getInstance()),
-		graphics("The amazing Snake!", windowSize, 150) {
+		m_matrix(),
+		m_windowSize(windowSize),
+		m_inputManager(m_inputManager.getInstance()),
+		m_graphics("The amazing Snake!", windowSize, 150) {
 
 		fillTextureBank();
 	}
@@ -14,25 +14,19 @@ namespace snake {
 	void Game::menu() {
 		bool menu = true;
 
-		/*std::cout << "Welcome to the Snake Game\n"
-			"[1] - Start Game\n"
-			"[2] - Leaderboard\n"
-			"[ESC] - Exit Game" << std::endl;*/
-
-
 		while (menu) {
-			graphics.clearScreen();
-			graphics.readyTexture('g', 0, 0, 100, 100);
-			SDL_Rect txtBox1 = graphics.readyTexture('x', 10, 20, 80, 20);
-			SDL_Rect txtBox2 = graphics.readyTexture('x', 10, 50, 80, 20);
-			graphics.writeText("Start Game", 15, 25, 85);
-			graphics.writeText("Leaderboard", 15, 55, 85);
-			graphics.renderGraphics();
+			m_graphics.clearScreen();
+			m_graphics.readyTexture("Sprites/Green.bmp", 0, 0, 100, 100);
+			SDL_Rect txtBox1 = m_graphics.readyTexture("Sprites/TextBox.bmp", 10, 20, 80, 20);
+			SDL_Rect txtBox2 = m_graphics.readyTexture("Sprites/TextBox.bmp", 10, 50, 80, 20);
+			m_graphics.writeText("Start Game", 15, 25, 85);
+			m_graphics.writeText("Leaderboard", 15, 55, 85);
+			m_graphics.renderGraphics();
 
-			inputManager.update();
+			m_inputManager.update();
 
 			/* Escapes */
-			if (inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
+			if (m_inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
 				menu = false;
 			}
 			if (SDL_HasEvent(SDL_QUIT)) {
@@ -41,12 +35,12 @@ namespace snake {
 
 			/* Actions */
 
-			if (inputManager.mouseDown(SDL_BUTTON_LEFT)) {
+			if (m_inputManager.mouseDown(SDL_BUTTON_LEFT)) {
 
 				if (mouseInsideArea(txtBox1)) {
+					countDown();
 					renderGameMargin();
 					start();
-					//menu = false;
 				}
 
 				if (mouseInsideArea(txtBox2)) {
@@ -56,111 +50,153 @@ namespace snake {
 		}
 	}
 
+	void Game::countDown() {
+		m_graphics.clearScreen();
+		m_graphics.writeText("3", 40, 40, 100);
+		m_graphics.renderGraphics();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		m_graphics.clearScreen();
+		m_graphics.writeText("2", 40, 40, 100);
+		m_graphics.renderGraphics();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		m_graphics.clearScreen();
+		m_graphics.writeText("1", 40, 40, 100);
+		m_graphics.renderGraphics();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+
 	void Game::start() {
-		bool running = true;
-		speed = 0.3;
-		unsigned score = 0;
+		m_running = true;
+		m_speed = 0.3;
+
 		Direction newDir = Direction::up;
 		Direction direction = newDir;
 
-		matrix = std::make_unique<Matrix<matrixSize>>();
+		//std::thread outputThread([this] { updateGraphics(); });
+		//std::thread outputThread(&updateGraphics);
+		std::thread inputThread([this, &newDir] { recieveUserInput(newDir); });
 
-		auto timeCount = time.now();
+		m_matrix = std::make_unique<Matrix<matrixSize>>();
 
-		updateMatrix();
+		auto timeCount = m_time.now();
 
-		while (running) {
-			graphics.renderGraphics();
-			inputManager.update();
+		updateGraphics(); //THIS DODODODODO
+		//graphicsCV.notify_one();
 
-			/* Escapes */
-			if (inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
-				running = false;
-			}
-			if (SDL_HasEvent(SDL_QUIT)) {
-				running = false;
-			}
+		while (m_running) {
 
-			/* Actions */
-			if (inputManager.keyDown(SDL_SCANCODE_X) && matrix->getSpecialFruits() > 0) {
-				matrix->activateSpecialFruit();
-			}
+			//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
-			/* Arrows - Input */
-			if (inputManager.keyDown(SDL_SCANCODE_UP) || inputManager.keyDown(SDL_SCANCODE_W)) {
-				newDir = Direction::up;
+			m_graphics.renderGraphics();
+			m_inputManager.update();
 
-			} else if (inputManager.keyDown(SDL_SCANCODE_DOWN) || inputManager.keyDown(SDL_SCANCODE_S)) {
-				newDir = Direction::down;
+			//recieveUserInput(newDir);
 
-			} else if (inputManager.keyDown(SDL_SCANCODE_RIGHT) || inputManager.keyDown(SDL_SCANCODE_D)) {
-				newDir = Direction::right;
-
-			} else if (inputManager.keyDown(SDL_SCANCODE_LEFT) || inputManager.keyDown(SDL_SCANCODE_A)) {
-				newDir = Direction::left;
-
-			}
-
+			//std::cout << "outside\n";
 			//Will only move once every {speed} seconds
-			std::chrono::duration<double> diff = time.now() - timeCount;
-			if (diff.count() > speed) {
-				timeCount = time.now();
+			std::chrono::duration<double> diff = m_time.now() - timeCount;
+			if (diff.count() > m_speed) {
+				//std::cout << "tick\n";
+				timeCount = m_time.now();
 
 				//The snake cannot move in the direction opposite of the current
 				if (!(newDir == !direction)) {
 					direction = newDir;
 				}
 
-
-				if (direction == Direction::up) {
-
-					//std::cout << "UP" << std::endl;
-					matrix->moveUp();
-
-				} else if (direction == Direction::down) {
-
-					//std::cout << "DOWN" << std::endl;
-					matrix->moveDown();
-
-				} else if (direction == Direction::right) {
-
-					//std::cout << "RIGHT" << std::endl;
-					matrix->moveRight();
-
-				} else if (direction == Direction::left) {
-
-					//std::cout << "LEFT" << std::endl;
-					matrix->moveLeft();
-				}
-				std::cout << *matrix.get();
-				updateMatrix();
+				moveSnake(direction);
+				//std::thread gameThread([this, &direction] { moveSnake(direction); });
+				//std::thread gameThread(&moveSnake, direction);
+				//gameThread.join();
 			}
-			if (matrix->isGameOver()) {
+			if (m_matrix->isGameOver()) {
 				gameOver();
-				running = false;
+				m_running = false;
 			}
+			
+			
 		}
+		inputThread.join();
+		//outputThread.join();
 	}
 
 	void Game::gameOver() {
-		graphics.readyTexture('o', 0, 0, 100, 100);
-		graphics.renderGraphics();
-		while ( !(
-			inputManager.keyDown(SDL_SCANCODE_RETURN) || 
-			inputManager.keyDown(SDL_SCANCODE_ESCAPE) || 
-			inputManager.mouseDown(SDL_BUTTON_LEFT))) {
+		m_graphics.readyTexture("Sprites/GameOver.bmp", 0, 0, 100, 100);
+		m_graphics.renderGraphics();
+		
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		addNewScore(m_matrix->getScore()); //TODO THE STRING HERE IS NOT NEEDED
+		leaderBoard();
+	}
 
-			inputManager.update();
+	void Game::recieveUserInput(Direction& newDir) {
+
+		while (m_running) {
+			//inputManager.update();
+
+			/* Escapes */
+			if (m_inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
+				m_running = false;
+			}
+			if (SDL_HasEvent(SDL_QUIT)) {
+				m_running = false;
+			}
+
+			/* Actions */
+			if (m_inputManager.keyDown(SDL_SCANCODE_X) && m_matrix->getSpecialFruits() > 0) {
+				m_matrix->activateSpecialFruit();
+			}
+
+			/* Arrows - Input */
+			if (m_inputManager.keyDown(SDL_SCANCODE_UP) || m_inputManager.keyDown(SDL_SCANCODE_W)) {
+				newDir = Direction::up;
+
+			} else if (m_inputManager.keyDown(SDL_SCANCODE_DOWN) || m_inputManager.keyDown(SDL_SCANCODE_S)) {
+				newDir = Direction::down;
+
+			} else if (m_inputManager.keyDown(SDL_SCANCODE_RIGHT) || m_inputManager.keyDown(SDL_SCANCODE_D)) {
+				newDir = Direction::right;
+
+			} else if (m_inputManager.keyDown(SDL_SCANCODE_LEFT) || m_inputManager.keyDown(SDL_SCANCODE_A)) {
+				newDir = Direction::left;
+			}
+
 		}
-		addNewScore("default", score);
+	}
+
+	void Game::moveSnake(Direction& direction) {
+		if (direction == Direction::up) {
+			m_matrix->moveSnakeUp();
+
+		} else if (direction == Direction::down) {
+			m_matrix->moveSnakeDown();
+
+		} else if (direction == Direction::right) {
+			m_matrix->moveSnakeRight();
+
+		} else if (direction == Direction::left) {
+			m_matrix->moveSnakeLeft();
+		}
+
+		std::cout << *m_matrix.get();
+		
+		updateGraphics(); 
+
+		/*std::cout << "Notify before\n";
+		graphicsCV.notify_one(); //ay im done, unlock
+		std::cout << "Notify after\n";*/
+	}
+
+	void Game::renderGraphics() {
+		//std::cout << "OUTPUT" << std::endl;
 	}
 
 	void Game::renderGameMargin() {
 
-		graphics.clearScreen();
-		graphics.readyTexture('g', 0, 0, 100, 100);
-		graphics.writeText("Score: ", 50, 5, 60);
-		graphics.renderGraphics();
+		m_graphics.clearScreen();
+		m_graphics.readyTexture("Sprites/Green.bmp", 0, 0, 100, 100);
+		m_graphics.writeText("Score: ", 50, 5, 60);
+		m_graphics.renderGraphics();
 	}
 
 	inline unsigned Game::extractDigit(unsigned number, unsigned exponent) {
@@ -168,78 +204,114 @@ namespace snake {
 	}
 
 	void Game::clearStats() {
-		graphics.readyTexture('g', 70, 5, 15, 10);
+		m_graphics.readyTexture("Sprites/Green.bmp", 70, 5, 15, 10);
 		for (int i = 0; i < matrixSize; i++) {
-			graphics.readyTexture('g', i, matrixSize + 1, matrixSize);
+			m_graphics.readyTexture("Sprites/Green.bmp", i, matrixSize + 1, matrixSize);
 		}
 	}
 
-	void Game::updateMatrix() {
-		static bool specialColor = false;
-		auto matrixView = matrix->getLayout();
-		bool specialSnake = matrix->isSpecialSnake();
-		unsigned specialFruits = matrix->getSpecialFruits();
+	void Game::updateGraphics() {
+		unsigned specialFruits;
+		unsigned score;
 
-		score = matrix->getSnakeSize() - 1;
-		//Every 5 score speed gets quicker
-		if (score != 0 && score % 5 == 0) {
-			speed -= 0.002;
-		}
+		//std::unique_lock<std::mutex> ul(m_graphicsLock);
 
-		if (specialSnake)
-			specialColor = !specialColor;
+		//std::cout << "update\n";
+		//while (running) {
+			//std::cout << "loop\n";
+			//graphicsCV.wait(ul);
+			//std::cout << "after wait\n";
 
-		for (Uint8 i = 0; i < matrixSize; i++) {
-			for (Uint8 j = 0; j < matrixSize; j++) {
-				auto cell = matrix->getLayout()[i][j];
-				char type = cell.getType();
+			specialFruits = m_matrix->getSpecialFruits();
+			score = m_matrix->getScore();
 
-				if (cell.hasChanged()) {
 
-					if (specialSnake && specialColor) {
-						if (type == 'h') {
-							type = 'v';
-						} else if (type == 's') {
-							type = 'i';
-						}
+			//Every 5 score speed gets quicker
+			if (score != 0 && score % 5 == 0) {
+				m_speed -= 0.001;
+			}
+
+			for (Uint8 i = 0; i < matrixSize; i++) {
+				for (Uint8 j = 0; j < matrixSize; j++) {
+					auto cell = m_matrix->getLayout()[i][j];
+					char type = cell.getType();
+
+					if (cell.hasChanged()) {
+						std::string image = getImageFromType(type);
+						m_graphics.readyTexture(image, j, i, matrixSize);
 					}
-					graphics.readyTexture(type, j, i, matrixSize);
 				}
 			}
-		}
 
-		clearStats();
-		//Setting stats
-		for (int i = 0; i < specialFruits; i++) {
-			graphics.readyTexture('b', i, matrixSize + 1, matrixSize);
-		}
+			clearStats();
+			//Setting stats
+			for (int i = 0; i < specialFruits; i++) {
+				m_graphics.readyTexture("Sprites/SpecialFruit.bmp", i, matrixSize + 1, matrixSize);
+			}
 
-		graphics.writeText(std::to_string(extractDigit(score, 2)), 70, 5, 60);
-		graphics.writeText(std::to_string(extractDigit(score, 1)), 75, 5, 60);
-		graphics.writeText(std::to_string(extractDigit(score, 0)), 80, 5, 60);
+			m_graphics.writeText(std::to_string(extractDigit(score, 2)), 70, 5, 60);
+			m_graphics.writeText(std::to_string(extractDigit(score, 1)), 75, 5, 60);
+			m_graphics.writeText(std::to_string(extractDigit(score, 0)), 80, 5, 60);
+		//}
 	}
 
 	void Game::fillTextureBank() {
 		//Textures
-		graphics.createTexture("Sprites/GameOver.bmp", 'o');
-		graphics.createTexture("Sprites/Green.bmp", 'g');
-		graphics.createTexture("Sprites/TextBox.bmp", 'x');
+		/*m_graphics.createTexture("Sprites/GameOver.bmp", 'o');
+		m_graphics.createTexture("Sprites/Green.bmp", 'g');
+		m_graphics.createTexture("Sprites/TextBox.bmp", 'x');
 
 		//Cells
-		graphics.createTexture("Sprites/Black.bmp", '0');			//Background
-		graphics.createTexture("Sprites/BrownBlock.bmp", 'w');		//Wall
-		graphics.createTexture("Sprites/BrownBlock.bmp", 't');		//Temp Wall
-		graphics.createTexture("Sprites/SnakeHead.bmp", 'h');		//Head
-		graphics.createTexture("Sprites/SnakeBlock.bmp", 's');		//Tail
-		graphics.createTexture("Sprites/InvertedHead.bmp", 'v');	//Inverted Head
-		graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');	//Inverted Tail
-		graphics.createTexture("Sprites/Fruit.bmp", 'f');			//Red Fruit
-		graphics.createTexture("Sprites/SpecialFruit.bmp", 'b');	//Blue Special Fruit
+		m_graphics.createTexture("Sprites/Black.bmp", '0');			//Background
+		m_graphics.createTexture("Sprites/BrownBlock.bmp", 'w');		//Wall
+		m_graphics.createTexture("Sprites/BrownBlock.bmp", 't');		//Temp Wall
+		m_graphics.createTexture("Sprites/SnakeHead.bmp", 'h');		//Head
+		m_graphics.createTexture("Sprites/SnakeBlock.bmp", 's');		//Tail
+		m_graphics.createTexture("Sprites/InvertedHead.bmp", 'v');	//Inverted Head
+		m_graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');	//Inverted Tail
+		m_graphics.createTexture("Sprites/Fruit.bmp", 'f');			//Red Fruit
+		m_graphics.createTexture("Sprites/SpecialFruit.bmp", 'b');	//Blue Special Fruit*/
+	}
+
+	std::string Game::getImageFromType(char type) {
+		std::string image = "Sprites/";
+
+		switch (type) {
+		case '0':
+			image += "Black";
+			break;
+		case 'w':
+			image += "BrownBlock";
+			break;
+		case 't': 
+			image += "BrownBlock";
+			break;
+		case 'h':
+			image += "SnakeHead";
+			break;
+		case 's':
+			image += "SnakeBlock";
+			break;
+		case 'v':
+			image += "InvertedHead";
+			break;
+		case 'i':
+			image += "InvertedSnake";
+			break;
+		case 'f':
+			image += "Fruit";
+			break;
+		case 'b':
+			image += "SpecialFruit";
+		}
+
+		image += ".bmp";
+		return image;
 	}
 
 	bool Game::mouseInsideArea(SDL_Rect rectangle) {
-		int x = inputManager.getMouseX();
-		int y = inputManager.getMouseY();
+		int x = m_inputManager.getMouseX();
+		int y = m_inputManager.getMouseY();
 
 		return (
 			x >= rectangle.x &&
@@ -251,62 +323,114 @@ namespace snake {
 
 	void Game::leaderBoard() {
 
+		std::vector<Score> scores;
 		std::ifstream leaderBoard;
 		std::string line;
+
+		std::cout << "entering\n";
+
+		m_graphics.clearScreen();
+		m_graphics.readyTexture("Sprites/Green.bmp", 0, 0, 100, 100);
+		m_graphics.writeText("Leaderboard:", 30, 10, 90);
+
+		getFromLeaderBoard(scores);
+		
+		uint8_t yPercent = 30;
+		int num = 1;
+		for (int i = scores.size() - 1; i >= 0 && yPercent < 90; i--) {
+			std::stringstream ss;
+			ss << num << ": " << scores[i].getName() << " - " << scores[i].getScore() << " points.";
+			m_graphics.writeText(ss.str(), 10, yPercent, 50);
+			yPercent += 10;
+			num++;
+		}
+
+		m_graphics.renderGraphics();
+
+		waitForInput();
+	}
+
+	void Game::addNewScore(unsigned score) {
+
+		std::vector<Score> scores;
+		std::stringstream name;
+
+		getFromLeaderBoard(scores);
+		
+		name << "Player " << scores.size();
+		Score myScore(name.str(), score);
+
+		//If scores are smae, the new will be placed beneath the first
+		scores.insert(std::lower_bound(scores.begin(), scores.end(), myScore), myScore);
+		writeToLeaderBoard(scores);
+	}
+
+	void Game::getFromLeaderBoard(std::vector<Score>& scores) {
+		std::ifstream leaderBoard;
+		std::string line;
+
+		/* Opening leaderBoard file for reading old sorted results */
 		leaderBoard.open("TextFiles/Leaderboard.txt");
 		if (leaderBoard.is_open()) {
 			while (std::getline(leaderBoard, line)) {
-				std::cout << line << std::endl;
-			}
-			leaderBoard.close();
-		} else {
-			std::cout << "Unable to open file" << std::endl;
-		}
-	}
-
-	void Game::addNewScore(std::string name, unsigned score) {
-
-		//Score myScore(name, score);
-		//std::vector<Score> scores;
-		int myScore = score;
-		std::vector<int> scores;
-		std::fstream leaderBoard;
-		std::string line;
-
-		//TODO: This works with vecotr<int> but not with vector<Score>. I cant seem to figure out what needs to be overloaded.... 
-
-		/* Opening leaderBoard file for reading old sorted results */
-		leaderBoard.open("TextFiles/Leaderboard.txt", std::ios::in);
-		if (leaderBoard.is_open()) {
-			while (std::getline(leaderBoard, line)) {
-				std::cout << line << std::endl;
 
 				size_t splitter = line.find_last_of(';');
 				std::string tempName = line.substr(0, splitter);
 				unsigned tempScore = std::stoi(line.substr(splitter + 1));
 
-				scores.emplace_back(/*tempName, */tempScore);
+				//scores.emplace_back(tempName, tempScore);
+				scores.emplace(scores.begin(), tempName, tempScore);
 			}
 
-			scores.insert(std::upper_bound(scores.begin(), scores.end(), myScore), myScore);
 			leaderBoard.close();
-
 		} else {
 			std::cout << "Unable to open leaderBoard file for input" << std::endl;
 		}
+	}
 
+	void Game::writeToLeaderBoard(const std::vector<Score>& scores) {
+		std::ofstream leaderBoard;
+		
 		/* Opening leaderBoard file for writing over with new sorted results */
-		leaderBoard.open("TextFiles/Leaderboard.txt", std::ios::out);
+		leaderBoard.open("TextFiles/Leaderboard.txt");
 		if (leaderBoard.is_open()) {
 
-			for (auto s : scores) {
-				//leaderBoard << /*s.name <<*/ ';' << s/*.score*/ << '\n';
-				leaderBoard << /*s.name*/ "default name" << ';' << s/*.score*/ << '\n';
+			//for (auto it = scores.end(); it >= scores.begin(); --it) {
+			for (int i = scores.size() - 1; i >= 0; i--) {
+				leaderBoard << scores[i].getName() << ';' << scores[i].getScore() << '\n';
 			}
 
 			leaderBoard.close();
 		} else {
 			std::cout << "Unable to open leaderBoard file for output" << std::endl;
 		}
+	}
+
+	void Game::waitForInput() {
+		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		while (!(
+			m_inputManager.keyDown(SDL_SCANCODE_RETURN) ||
+			m_inputManager.keyDown(SDL_SCANCODE_ESCAPE))) {
+			//Her er det dumt å ha med musetast, da den leser musetasten nede når den entrer funksjonen Leaderboard
+
+			m_inputManager.update();
+		}
+	}
+
+	void Game::userTextInput() {
+		//WE MIGHT ADD THIS BUT PERHAPS WE TAKE IT AWAY IF BECOMES TOO COMPLICATED
+		SDL_StartTextInput();
+		while (1) {
+			m_inputManager.update();
+
+			if (m_inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
+				break;
+			}
+
+			if (m_inputManager.keyDown(SDL_TEXTINPUT)) {
+				std::cout << "TEXTINPUT" << std::endl;
+			}
+		}
+		SDL_StopTextInput();
 	}
 }

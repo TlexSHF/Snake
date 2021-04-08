@@ -1,23 +1,25 @@
 #include "Cell.h"
 
-#include <iostream> //take away
-
 namespace snake {
 
     char Cell::getType() {
-        return type;
+        return m_type;
     }
 
-    void Cell::setType(char t) {
-        if (type != t) {
-            changed = true;
-            type = t;
+    void Cell::setType(char type) {
+        if (m_type != type) {
+            m_changed = true;
+            m_type = type;
         } else {
-            changed = false;
+            m_changed = false;
         }
     }
 
     bool Cell::hasChanged() {
-        return changed;
+        return m_changed;
+    }
+
+    std::ostream& operator<<(std::ostream& os, Cell& c) {
+        return os << c.m_type;
     }
 }

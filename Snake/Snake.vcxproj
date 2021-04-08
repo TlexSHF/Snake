@@ -146,10 +146,12 @@
     <ClCompile Include="GraphicsManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Snake.cpp" />
+    <ClCompile Include="TextTexture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Coords.h" />
     <ClInclude Include="Direction.h" />
@@ -160,7 +162,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="TextTexture.h" />
-    <ClInclude Include="TexturePair.h" />
+    <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

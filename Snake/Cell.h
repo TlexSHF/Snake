@@ -8,15 +8,14 @@ namespace snake {
 	struct Cell {
 	public:
 		char getType();
-		void setType(char t);
+		void setType(char type);
 		bool hasChanged();
 
-		friend std::ostream& operator<<(std::ostream& os, Cell& c) {
-			return os << c.type;
-		}
+		friend std::ostream& operator<<(std::ostream& os, Cell& c);
+
 	private:
-		char type = 0;
-		bool changed = true;
+		char m_type = 0;
+		bool m_changed = true;
 	};
 }
 

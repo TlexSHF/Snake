@@ -1,5 +1,8 @@
-default name;1
-default name;5
-default name;8
-default name;8
-default name;14
+Player 0;24
+Player 3;14
+Player 5;9
+Player 7;2
+Player 6;1
+Player 2;0
+Player 3;0
+Player 4;0

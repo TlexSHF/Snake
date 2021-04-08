@@ -1,0 +1,44 @@
+﻿  Cell.cpp
+  Coords.cpp
+  Game.cpp
+C:\Users\simon\source\repos\Snake\Snake\Score.h(49,23): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(52,23): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(55,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(58,23): warning C4018: '>': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(62,13): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(65,13): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(68,13): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(71,13): warning C4018: '>': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(248,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(93,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(87): message : while compiling class template member function 'snake::Matrix<15>::Matrix(void)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\memory(2833): message : see reference to function template instantiation 'snake::Matrix<15>::Matrix(void)' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(106): message : while compiling class template member function 'const std::array<std::array<snake::Cell,15>,15> snake::Matrix<15>::getLayout(void)'
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(237): message : see reference to function template instantiation 'const std::array<std::array<snake::Cell,15>,15> snake::Matrix<15>::getLayout(void)' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Game.cpp(108): message : see reference to class template instantiation 'snake::Matrix<15>' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(199,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(195): message : while compiling class template member function 'void snake::Matrix<15>::createWalls(void)'
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(96): message : see reference to function template instantiation 'void snake::Matrix<15>::createWalls(void)' being compiled
+C:\Users\simon\source\repos\Snake\Snake\Matrix.h(87): message : while compiling class template member function 'snake::Matrix<15>::Matrix(void)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\memory(2833): message : see reference to function template instantiation 'snake::Matrix<15>::Matrix(void)' being compiled
+  GraphicsManager.cpp
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(169,28): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(170,29): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\simon\source\repos\Snake\Snake\GraphicsManager.cpp(186,21): warning C4018: '<': signed/unsigned mismatch
+  InputManager.cpp
+  main.cpp
+C:\Users\simon\source\repos\Snake\Snake\Score.h(49,23): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(52,23): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(55,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(58,23): warning C4018: '>': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(62,13): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(65,13): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(68,13): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\Snake\Snake\Score.h(71,13): warning C4018: '>': signed/unsigned mismatch
+  Snake.cpp
+  TextTexture.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 774 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Snake.vcxproj -> C:\Users\simon\source\repos\Snake\Release\Snake.exe

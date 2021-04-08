@@ -3,6 +3,10 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 #include <chrono>
 #include <string>
 #include <algorithm>
@@ -22,29 +26,45 @@ namespace snake {
 		Game(size_t windowSize);
 		void menu();
 	private:
-		InputManager& inputManager;
-		std::unique_ptr<Matrix<matrixSize>> matrix;
-		GraphicsManager graphics;
+		InputManager& m_inputManager;
+		std::unique_ptr<Matrix<matrixSize>> m_matrix;
+		GraphicsManager m_graphics;
 
-		std::chrono::high_resolution_clock time;
-		size_t windowSize;
+		std::chrono::high_resolution_clock m_time;
+		size_t m_windowSize;
 
-		double speed = 0;
-		unsigned score = 0;
+		bool m_running = true;
+		double m_speed = 0;
 
+		//std::mutex m_graphicsLock; //Not sure if we needs these
+		//std::condition_variable m_graphicsCV;
+
+		void countDown();
 		void start();
 		void gameOver();
+		
+		void recieveUserInput(Direction& newDir);
+		void moveSnake(Direction& direction);
+		void renderGraphics();
 
 		void renderGameMargin();
 		void clearStats();
-		void updateMatrix();
+		void updateGraphics();
 		void fillTextureBank();
+
+		std::string getImageFromType(char type);
 
 		unsigned extractDigit(unsigned number, unsigned exponent);
 		bool mouseInsideArea(SDL_Rect rectangle); //TODO MOVED THIS DOWN ^
 
 		void leaderBoard();
-		void addNewScore(std::string name, unsigned score);
+		void addNewScore(unsigned score);
+
+		void getFromLeaderBoard(std::vector<Score>& scores);
+		void writeToLeaderBoard(const std::vector<Score>& scores);
+
+		void waitForInput();
+		void userTextInput();
 	};
 }
 

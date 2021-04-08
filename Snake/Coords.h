@@ -13,8 +13,8 @@ namespace snake {
 		bool operator==(const Coords& other);
 
 	private:
-		unsigned x;
-		unsigned y;
+		unsigned m_x;
+		unsigned m_y;
 	};
 }
 

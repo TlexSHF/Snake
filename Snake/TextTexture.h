@@ -7,12 +7,18 @@
 namespace snake {
 
 	struct TextTexture {
+	public:
 		TextTexture(std::string text, size_t size, SDL_Texture* texture) :
-			text(text), size(size), texture(texture) {}
+			m_text(text), m_size(size), m_texture(texture) {}
 
-		std::string text;
-		size_t size;
-		SDL_Texture* texture;
+		std::string getText() const;
+		size_t getSize() const;
+		SDL_Texture* getTexture() const;
+
+	private:
+		std::string m_text;
+		size_t m_size;
+		SDL_Texture* m_texture;
 	};
 }
 

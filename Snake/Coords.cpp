@@ -2,22 +2,22 @@
 
 namespace snake {
 
-	Coords::Coords(unsigned x, unsigned y) : x(x), y(y) {}
+	Coords::Coords(unsigned x, unsigned y) : m_x(x), m_y(y) {}
 
 	unsigned Coords::getX() {
-		return x;
+		return m_x;
 	}
 
 	unsigned Coords::getY() {
-		return y;
+		return m_y;
 	}
 
 	void Coords::setCoords(unsigned x, unsigned y) {
-		this->x = x;
-		this->y = y;
+		m_x = x;
+		m_y = y;
 	}
 
 	bool Coords::operator==(const Coords& other) {
-		return this->x == other.x && this->y == other.y;
+		return m_x == other.m_x && m_y == other.m_y;
 	}
 }

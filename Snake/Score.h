@@ -7,27 +7,35 @@ namespace snake {
 
 	struct Score {
 	public:
-		Score(std::string name, unsigned score) :
-			name(name), score(score) {}
+		Score(std::string name, unsigned score);
 
-		const std::string name;
-		const unsigned score;
+		/* Getters */
+		std::string getName() const;
+		unsigned getScore() const;
 
-		bool operator==(const Score& other) {
-			return this->score == other.score;
-		}
-		bool operator<=(const Score& other) {
-			return this->score <= other.score;
-		}
-		bool operator>=(const Score& other) {
-			return this->score >= other.score;
-		}
-		bool operator<(const Score& other) {
-			return this->score < other.score;
-		}
-		bool operator>(const Score& other) {
-			return this->score > other.score;
-		}
+		/* Compare with same type object */
+		Score& operator=(Score other);
+		bool operator==(const Score& other) const;
+		bool operator<=(const Score& other) const;
+		bool operator>=(const Score& other) const;
+		bool operator<(const Score& other) const;
+		bool operator>(const Score& other) const;
+
+		/* Compare object with int */
+		bool operator<=(int i) const;
+		bool operator>=(int i) const;
+		bool operator<(int i) const;
+		bool operator>(int i) const;
+
+		/* Compare int with object */
+		friend bool operator<=(int i, const Score& s);
+		friend bool operator>=(int i, const Score& s);
+		friend bool operator<(int i, const Score& s);
+		friend bool operator>(int i, const Score& s);
+
+	private:
+		std::string m_name;
+		unsigned m_score;
 	};
 }
 
