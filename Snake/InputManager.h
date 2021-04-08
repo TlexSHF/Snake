@@ -11,7 +11,7 @@ namespace snake {
 	class InputManager {
 	public:
 		static InputManager& getInstance();
-		bool update();
+		void update();
 
 		//Keyboard
 		bool keyDown(int keyIndex) const;

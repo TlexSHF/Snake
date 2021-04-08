@@ -21,16 +21,16 @@ namespace snake {
 		//Text er spesiellt fordi du også lagrer teksten
 
 	public:
-		SDL_Texture* getTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window);
 		SDL_Texture* getTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window);
+		SDL_Texture* getTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window);
 
 	private:
 		std::map<std::string, SDL_Texture*> m_textures;
 
 		std::string makeKey(std::string text, size_t size);
 
-		void createTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window);
 		void createTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window);
+		void createTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window);
 
 	};
 

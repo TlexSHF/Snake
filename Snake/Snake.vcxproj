@@ -148,7 +148,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Snake.cpp" />
-    <ClCompile Include="TextTexture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +160,6 @@
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="Snake.h" />
-    <ClInclude Include="TextTexture.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>

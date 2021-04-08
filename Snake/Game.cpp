@@ -16,9 +16,9 @@ namespace snake {
 
 		while (menu) {
 			m_graphics.clearScreen();
-			m_graphics.readyTexture("Sprites/Green.bmp", 0, 0, 100, 100);
-			SDL_Rect txtBox1 = m_graphics.readyTexture("Sprites/TextBox.bmp", 10, 20, 80, 20);
-			SDL_Rect txtBox2 = m_graphics.readyTexture("Sprites/TextBox.bmp", 10, 50, 80, 20);
+			m_graphics.drawTexture("Sprites/Green.bmp", 0, 0, 100, 100);
+			SDL_Rect txtBox1 = m_graphics.drawTexture("Sprites/TextBox.bmp", 10, 20, 80, 20);
+			SDL_Rect txtBox2 = m_graphics.drawTexture("Sprites/TextBox.bmp", 10, 50, 80, 20);
 			m_graphics.writeText("Start Game", 15, 25, 85);
 			m_graphics.writeText("Leaderboard", 15, 55, 85);
 			m_graphics.renderGraphics();
@@ -121,7 +121,7 @@ namespace snake {
 	}
 
 	void Game::gameOver() {
-		m_graphics.readyTexture("Sprites/GameOver.bmp", 0, 0, 100, 100);
+		m_graphics.drawTexture("Sprites/GameOver.bmp", 0, 0, 100, 100);
 		m_graphics.renderGraphics();
 		
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -194,7 +194,7 @@ namespace snake {
 	void Game::renderGameMargin() {
 
 		m_graphics.clearScreen();
-		m_graphics.readyTexture("Sprites/Green.bmp", 0, 0, 100, 100);
+		m_graphics.drawTexture("Sprites/Green.bmp", 0, 0, 100, 100);
 		m_graphics.writeText("Score: ", 50, 5, 60);
 		m_graphics.renderGraphics();
 	}
@@ -204,15 +204,16 @@ namespace snake {
 	}
 
 	void Game::clearStats() {
-		m_graphics.readyTexture("Sprites/Green.bmp", 70, 5, 15, 10);
+		m_graphics.drawTexture("Sprites/Green.bmp", 70, 5, 15, 10);
 		for (int i = 0; i < matrixSize; i++) {
-			m_graphics.readyTexture("Sprites/Green.bmp", i, matrixSize + 1, matrixSize);
+			m_graphics.drawTexture("Sprites/Green.bmp", i, matrixSize + 1, matrixSize);
 		}
 	}
 
 	void Game::updateGraphics() {
 		unsigned specialFruits;
 		unsigned score;
+		auto matrixLayout = m_matrix->getLayout();
 
 		//std::unique_lock<std::mutex> ul(m_graphicsLock);
 
@@ -233,12 +234,12 @@ namespace snake {
 
 			for (Uint8 i = 0; i < matrixSize; i++) {
 				for (Uint8 j = 0; j < matrixSize; j++) {
-					auto cell = m_matrix->getLayout()[i][j];
+					auto cell = matrixLayout[i][j];
 					char type = cell.getType();
 
 					if (cell.hasChanged()) {
 						std::string image = getImageFromType(type);
-						m_graphics.readyTexture(image, j, i, matrixSize);
+						m_graphics.drawTexture(image, j, i, matrixSize);
 					}
 				}
 			}
@@ -246,7 +247,7 @@ namespace snake {
 			clearStats();
 			//Setting stats
 			for (int i = 0; i < specialFruits; i++) {
-				m_graphics.readyTexture("Sprites/SpecialFruit.bmp", i, matrixSize + 1, matrixSize);
+				m_graphics.drawTexture("Sprites/SpecialFruit.bmp", i, matrixSize + 1, matrixSize);
 			}
 
 			m_graphics.writeText(std::to_string(extractDigit(score, 2)), 70, 5, 60);
@@ -330,7 +331,7 @@ namespace snake {
 		std::cout << "entering\n";
 
 		m_graphics.clearScreen();
-		m_graphics.readyTexture("Sprites/Green.bmp", 0, 0, 100, 100);
+		m_graphics.drawTexture("Sprites/Green.bmp", 0, 0, 100, 100);
 		m_graphics.writeText("Leaderboard:", 30, 10, 90);
 
 		getFromLeaderBoard(scores);

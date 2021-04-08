@@ -1,6 +1,17 @@
 #include "TextureManager.h"
 
 namespace snake {
+	
+	/* Public */
+	SDL_Texture* TextureManager::getTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window) {
+		if (m_textures.count(image) > 0) {
+			return m_textures[image];
+		} else {
+			createTexture(image, renderer, window);
+			return m_textures[image];
+		}
+	}
+
 	SDL_Texture* TextureManager::getTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window) {
 		std::string key = makeKey(text, size);
 
@@ -11,19 +22,31 @@ namespace snake {
 			return m_textures[key];
 		}
 	}
-	SDL_Texture* snake::TextureManager::getTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window) {
-		if (m_textures.count(image) > 0) {
-			return m_textures[image];
-		} else {
-			createTexture(image, renderer, window);
-			return m_textures[image];
-		}
-	}
 
+	/* Private */
 	std::string TextureManager::makeKey(std::string text, size_t size) {
 		std::stringstream key;
 		key << text << ':' << size;
 		return key.str();
+	}
+
+	void TextureManager::createTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window) {
+		SDL_Surface* surface = SDL_LoadBMP(image.c_str());
+
+		if (surface == nullptr) {
+			std::cerr << "Failed to load image: "
+				<< SDL_GetError() << std::endl;
+			SDL_DestroyRenderer(renderer);
+			SDL_DestroyWindow(window);
+			SDL_Quit();
+
+		} else {
+			SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+			SDL_FreeSurface(surface);
+
+			//Insertion doesn't override the first texture written
+			m_textures.insert({ image, texture });
+		}
 	}
 
 	void TextureManager::createTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window) {
@@ -46,25 +69,6 @@ namespace snake {
 
 			//m_texts.emplace_back(text, size, texture);
 			m_textures.insert({ key, texture });
-		}
-	}
-
-	void snake::TextureManager::createTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window) {
-		SDL_Surface* surface = SDL_LoadBMP(image.c_str());
-
-		if (surface == nullptr) {
-			std::cerr << "Failed to load image: "
-				<< SDL_GetError() << std::endl;
-			SDL_DestroyRenderer(renderer);
-			SDL_DestroyWindow(window);
-			SDL_Quit();
-
-		} else {
-			SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-			SDL_FreeSurface(surface);
-
-			//Insertion doesn't override the first texture written
-			m_textures.insert({ image, texture });
 		}
 	}
 }

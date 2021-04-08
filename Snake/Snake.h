@@ -20,7 +20,7 @@ namespace snake {
 		int getY();
 		bool hasNewLimb();
 
-		std::vector<Coords> getLimbs(); //TODO: Might rename all "limbs" to "segments"
+		std::vector<Coords> getLimbs();
 
 		/* Movement */
 		void moveUp();

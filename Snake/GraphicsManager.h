@@ -10,7 +10,6 @@
 #include <SDL_ttf.h>
 #include <vector>
 #include "TextureManager.h"
-#include "TextTexture.h"
 
 namespace snake {
 
@@ -20,13 +19,12 @@ namespace snake {
 		GraphicsManager(std::string name, size_t width, size_t height, size_t margin);
 		~GraphicsManager();
 
-		void readyTexture(std::string image, unsigned x, unsigned y, size_t gridSize);
-		SDL_Rect readyTexture(std::string image, double xPercent, double yPercent, double wPercent, double hPercent);
-
-		void writeText(std::string text, double xPercent, double yPercent, size_t size);
-
 		void renderGraphics();
 		void clearScreen();
+
+		void drawTexture(std::string image, unsigned x, unsigned y, size_t gridSize);
+		SDL_Rect drawTexture(std::string image, double xPercent, double yPercent, double wPercent, double hPercent);
+		void writeText(std::string text, double xPercent, double yPercent, size_t size);
 
 	private:
 		SDL_Window* m_window = nullptr;

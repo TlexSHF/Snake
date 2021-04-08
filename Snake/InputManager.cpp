@@ -9,7 +9,7 @@ namespace snake {
 		return instance;
 	}
 
-	bool InputManager::update() {
+	void InputManager::update() {
 
 		m_oldBtnStates = m_btnStates;
 		if (m_oldKeyStates.get() != nullptr && m_keyStates != nullptr)
@@ -17,8 +17,6 @@ namespace snake {
 
 		SDL_PumpEvents();
 		m_btnStates = SDL_GetMouseState(&m_mouseX, &m_mouseY);
-
-		return false;
 	}
 
 	bool InputManager::keyDown(int keyIndex) const {

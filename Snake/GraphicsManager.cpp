@@ -29,7 +29,16 @@ namespace snake {
 		SDL_Quit();
 	}
 
-	void GraphicsManager::readyTexture(std::string image, unsigned x, unsigned y, size_t gridSize) {
+	void GraphicsManager::renderGraphics() {
+		SDL_RenderPresent(m_renderer);
+		//SDL_RenderClear(m_renderer);
+	}
+
+	void GraphicsManager::clearScreen() {
+		SDL_RenderClear(m_renderer);
+	}
+
+	void GraphicsManager::drawTexture(std::string image, unsigned x, unsigned y, size_t gridSize) {
 		
 		SDL_Texture* texture = m_textureManager.getTexture(image, m_renderer, m_window);
 
@@ -42,7 +51,7 @@ namespace snake {
 		renderCopy(texture, coords);
 	}
 
-	SDL_Rect GraphicsManager::readyTexture(std::string image, double xPercent, double yPercent, double wPercent, double hPercent) {
+	SDL_Rect GraphicsManager::drawTexture(std::string image, double xPercent, double yPercent, double wPercent, double hPercent) {
 
 		SDL_Texture* texture = m_textureManager.getTexture(image, m_renderer, m_window);
 
@@ -72,15 +81,6 @@ namespace snake {
 		coords.h = textH;
 
 		renderCopy(texture, coords);
-	}
-
-	void GraphicsManager::renderGraphics() {
-		SDL_RenderPresent(m_renderer);
-		//SDL_RenderClear(m_renderer);
-	}
-
-	void GraphicsManager::clearScreen() {
-		SDL_RenderClear(m_renderer);
 	}
 
 
