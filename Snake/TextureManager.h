@@ -11,15 +11,6 @@
 namespace snake {
 
 	class TextureManager {
-		//WriteTexture: tegner en texture
-			//Lager ny om ikke finnes, dermed adder i array
-			//Henter ut fra array
-		//Add texture: adder texture i et texture array
-
-		//Bruker MAP for å kunne søke med filnavn
-
-		//Text er spesiellt fordi du også lagrer teksten
-
 	public:
 		SDL_Texture* getTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window);
 		SDL_Texture* getTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window);
@@ -31,7 +22,6 @@ namespace snake {
 
 		void createTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window);
 		void createTextTexture(std::string text, size_t size, SDL_Renderer* renderer, SDL_Window* window);
-
 	};
 
 }

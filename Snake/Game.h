@@ -40,7 +40,7 @@ namespace snake {
 		//std::condition_variable m_graphicsCV;
 
 		void countDown();
-		void start();
+		void startGame();
 		void gameOver();
 		
 		void recieveUserInput(Direction& newDir);

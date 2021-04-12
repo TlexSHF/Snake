@@ -1,4 +1,3 @@
-
 #ifndef MATRIX_H
 #define MATRIX_H
 
@@ -202,10 +201,6 @@ namespace snake {
 			m_walls.emplace_back(max - i, max);
 			m_walls.emplace_back(0, max - i);
 		}
-
-		/*for (auto wall : walls) {
-			setCell(wall, 'w');
-		}*/
 	}
 
 	template<size_t size>

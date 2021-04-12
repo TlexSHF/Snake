@@ -40,7 +40,7 @@ namespace snake {
 				if (mouseInsideArea(txtBox1)) {
 					countDown();
 					renderGameMargin();
-					start();
+					startGame();
 				}
 
 				if (mouseInsideArea(txtBox2)) {
@@ -65,7 +65,7 @@ namespace snake {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
-	void Game::start() {
+	void Game::startGame() {
 		m_running = true;
 		m_speed = 0.3;
 
