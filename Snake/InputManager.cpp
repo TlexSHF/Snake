@@ -3,7 +3,7 @@
 
 namespace snake {
 
-	/* PUBLIC */
+	/* ------------- PUBLIC ------------- */
 	InputManager& InputManager::getInstance() {
 		static InputManager instance;
 		return instance;
@@ -67,7 +67,7 @@ namespace snake {
 		return m_mouseY;
 	}
 
-	/* PRIVATE */
+	/* ------------- PRIVATE ------------- */
 	InputManager::InputManager() :
 		m_keyStates(SDL_GetKeyboardState(&m_numOKeys)),
 		m_btnStates(SDL_GetMouseState(&m_mouseX, &m_mouseY)) {

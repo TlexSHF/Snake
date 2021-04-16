@@ -6,7 +6,6 @@ namespace snake {
 		m_boardSize(boardSize) {
 
 		m_limbs.emplace_back(x, y);
-		//limbs.emplace_back(x - 1, y);
 	}
 
 	void Snake::update(int x, int y) {
@@ -85,7 +84,7 @@ namespace snake {
 		return m_limbs.size();
 	}
 
-	int Snake::getX() { //MAKE SURE THAT THERE ARE NO WAYS THE LIMBS VECTOR CAN BE 0
+	int Snake::getX() {
 		return m_limbs[0].getX();
 	}
 

@@ -7,8 +7,6 @@ namespace snake {
 		m_windowSize(windowSize),
 		m_inputManager(m_inputManager.getInstance()),
 		m_graphics("The amazing Snake!", windowSize, 150) {
-
-		fillTextureBank();
 	}
 
 	void Game::menu() {
@@ -38,7 +36,7 @@ namespace snake {
 			if (m_inputManager.mouseDown(SDL_BUTTON_LEFT)) {
 
 				if (mouseInsideArea(txtBox1)) {
-					countDown();
+					loadingScreen();
 					renderGameMargin();
 					startGame();
 				}
@@ -50,17 +48,42 @@ namespace snake {
 		}
 	}
 
-	void Game::countDown() {
+	void Game::loadingScreen() {
+		updatePlayerName();
+
 		m_graphics.clearScreen();
-		m_graphics.writeText("3", 40, 40, 100);
+
+		m_graphics.writeText("Quick tips!", 5, 5, 90);
+		m_graphics.writeText("Move with: WASD or the ARROW KEYS", 5, 20, 50);
+		m_graphics.writeText("Move in any direction, except for", 5, 26, 50);
+		m_graphics.writeText("opposite of where you are heading", 5, 30, 50);
+		m_graphics.writeText("RED BERRY: Makes you bigger!", 5, 40, 50);
+		m_graphics.writeText("BLUE BERRY: Save them for later...", 5, 45, 50);
+		m_graphics.writeText("BROWN WALL: Hurts alot!", 5, 50, 50);
+		m_graphics.writeText("Press [X] to use your blue berries, ", 5, 60, 50);
+		m_graphics.writeText("and become insvinsible!", 5, 65, 50);
+		m_graphics.writeText("Some brown walls will be crushed,", 5, 70, 50);
+		m_graphics.writeText("when hitting them with invinsibility", 5, 75, 50);
+
+		m_graphics.writeText("Loading game...", 5, 90, 40);
+		m_graphics.renderGraphics();
+		std::this_thread::sleep_for(std::chrono::seconds(20));
+
+		m_graphics.clearScreen();
+		m_graphics.writeText("You are " + m_playerName, 5, 40, 80);
+		m_graphics.renderGraphics();
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+
+		m_graphics.clearScreen();
+		m_graphics.writeText("3", 40, 40, 130);
 		m_graphics.renderGraphics();
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 		m_graphics.clearScreen();
-		m_graphics.writeText("2", 40, 40, 100);
+		m_graphics.writeText("2", 40, 40, 130);
 		m_graphics.renderGraphics();
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 		m_graphics.clearScreen();
-		m_graphics.writeText("1", 40, 40, 100);
+		m_graphics.writeText("1", 40, 40, 130);
 		m_graphics.renderGraphics();
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
@@ -72,42 +95,30 @@ namespace snake {
 		Direction newDir = Direction::up;
 		Direction direction = newDir;
 
-		//std::thread outputThread([this] { updateGraphics(); });
-		//std::thread outputThread(&updateGraphics);
 		std::thread inputThread([this, &newDir] { recieveUserInput(newDir); });
 
 		m_matrix = std::make_unique<Matrix<matrixSize>>();
 
 		auto timeCount = m_time.now();
 
-		updateGraphics(); //THIS DODODODODO
-		//graphicsCV.notify_one();
+		updateGraphics();
 
 		while (m_running) {
-
-			//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
 			m_graphics.renderGraphics();
 			m_inputManager.update();
 
-			//recieveUserInput(newDir);
-
-			//std::cout << "outside\n";
 			//Will only move once every {speed} seconds
 			std::chrono::duration<double> diff = m_time.now() - timeCount;
 			if (diff.count() > m_speed) {
-				//std::cout << "tick\n";
 				timeCount = m_time.now();
 
-				//The snake cannot move in the direction opposite of the current
+				//Will not move in the direction opposite of the current
 				if (!(newDir == !direction)) {
 					direction = newDir;
 				}
 
 				moveSnake(direction);
-				//std::thread gameThread([this, &direction] { moveSnake(direction); });
-				//std::thread gameThread(&moveSnake, direction);
-				//gameThread.join();
 			}
 			if (m_matrix->isGameOver()) {
 				gameOver();
@@ -117,7 +128,6 @@ namespace snake {
 			
 		}
 		inputThread.join();
-		//outputThread.join();
 	}
 
 	void Game::gameOver() {
@@ -125,14 +135,13 @@ namespace snake {
 		m_graphics.renderGraphics();
 		
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		addNewScore(m_matrix->getScore()); //TODO THE STRING HERE IS NOT NEEDED
+		addNewScore(m_matrix->getScore());
 		leaderBoard();
 	}
 
 	void Game::recieveUserInput(Direction& newDir) {
 
 		while (m_running) {
-			//inputManager.update();
 
 			/* Escapes */
 			if (m_inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
@@ -179,16 +188,8 @@ namespace snake {
 		}
 
 		std::cout << *m_matrix.get();
-		
-		updateGraphics(); 
 
-		/*std::cout << "Notify before\n";
-		graphicsCV.notify_one(); //ay im done, unlock
-		std::cout << "Notify after\n";*/
-	}
-
-	void Game::renderGraphics() {
-		//std::cout << "OUTPUT" << std::endl;
+		updateGraphics();
 	}
 
 	void Game::renderGameMargin() {
@@ -196,6 +197,7 @@ namespace snake {
 		m_graphics.clearScreen();
 		m_graphics.drawTexture("Sprites/Green.bmp", 0, 0, 100, 100);
 		m_graphics.writeText("Score: ", 50, 5, 60);
+		m_graphics.writeText("X to use:", 0, 95, 30);
 		m_graphics.renderGraphics();
 	}
 
@@ -215,63 +217,35 @@ namespace snake {
 		unsigned score;
 		auto matrixLayout = m_matrix->getLayout();
 
-		//std::unique_lock<std::mutex> ul(m_graphicsLock);
+		specialFruits = m_matrix->getSpecialFruits();
+		score = m_matrix->getScore();
 
-		//std::cout << "update\n";
-		//while (running) {
-			//std::cout << "loop\n";
-			//graphicsCV.wait(ul);
-			//std::cout << "after wait\n";
+		//Every 5 score speed gets quicker
+		if (score != 0 && score % 5 == 0) {
+			m_speed -= 0.001;
+		}
 
-			specialFruits = m_matrix->getSpecialFruits();
-			score = m_matrix->getScore();
+		for (Uint8 i = 0; i < matrixSize; i++) {
+			for (Uint8 j = 0; j < matrixSize; j++) {
+				auto cell = matrixLayout[i][j];
+				char type = cell.getType();
 
-
-			//Every 5 score speed gets quicker
-			if (score != 0 && score % 5 == 0) {
-				m_speed -= 0.001;
-			}
-
-			for (Uint8 i = 0; i < matrixSize; i++) {
-				for (Uint8 j = 0; j < matrixSize; j++) {
-					auto cell = matrixLayout[i][j];
-					char type = cell.getType();
-
-					if (cell.hasChanged()) {
-						std::string image = getImageFromType(type);
-						m_graphics.drawTexture(image, j, i, matrixSize);
-					}
+				if (cell.hasChanged()) {
+					std::string image = getImageFromType(type);
+					m_graphics.drawTexture(image, j, i, matrixSize);
 				}
 			}
+		}
 
-			clearStats();
-			//Setting stats
-			for (int i = 0; i < specialFruits; i++) {
-				m_graphics.drawTexture("Sprites/SpecialFruit.bmp", i, matrixSize + 1, matrixSize);
-			}
+		clearStats();
 
-			m_graphics.writeText(std::to_string(extractDigit(score, 2)), 70, 5, 60);
-			m_graphics.writeText(std::to_string(extractDigit(score, 1)), 75, 5, 60);
-			m_graphics.writeText(std::to_string(extractDigit(score, 0)), 80, 5, 60);
-		//}
-	}
+		for (int i = 0; i < specialFruits; i++) {
+			m_graphics.drawTexture("Sprites/SpecialFruit.bmp", i, matrixSize + 1, matrixSize);
+		}
 
-	void Game::fillTextureBank() {
-		//Textures
-		/*m_graphics.createTexture("Sprites/GameOver.bmp", 'o');
-		m_graphics.createTexture("Sprites/Green.bmp", 'g');
-		m_graphics.createTexture("Sprites/TextBox.bmp", 'x');
-
-		//Cells
-		m_graphics.createTexture("Sprites/Black.bmp", '0');			//Background
-		m_graphics.createTexture("Sprites/BrownBlock.bmp", 'w');		//Wall
-		m_graphics.createTexture("Sprites/BrownBlock.bmp", 't');		//Temp Wall
-		m_graphics.createTexture("Sprites/SnakeHead.bmp", 'h');		//Head
-		m_graphics.createTexture("Sprites/SnakeBlock.bmp", 's');		//Tail
-		m_graphics.createTexture("Sprites/InvertedHead.bmp", 'v');	//Inverted Head
-		m_graphics.createTexture("Sprites/InvertedSnake.bmp", 'i');	//Inverted Tail
-		m_graphics.createTexture("Sprites/Fruit.bmp", 'f');			//Red Fruit
-		m_graphics.createTexture("Sprites/SpecialFruit.bmp", 'b');	//Blue Special Fruit*/
+		m_graphics.writeText(std::to_string(extractDigit(score, 2)), 70, 5, 60);
+		m_graphics.writeText(std::to_string(extractDigit(score, 1)), 75, 5, 60);
+		m_graphics.writeText(std::to_string(extractDigit(score, 0)), 80, 5, 60);
 	}
 
 	std::string Game::getImageFromType(char type) {
@@ -328,8 +302,6 @@ namespace snake {
 		std::ifstream leaderBoard;
 		std::string line;
 
-		std::cout << "entering\n";
-
 		m_graphics.clearScreen();
 		m_graphics.drawTexture("Sprites/Green.bmp", 0, 0, 100, 100);
 		m_graphics.writeText("Leaderboard:", 30, 10, 90);
@@ -354,16 +326,23 @@ namespace snake {
 	void Game::addNewScore(unsigned score) {
 
 		std::vector<Score> scores;
+
+		getFromLeaderBoard(scores);
+
+		Score myScore(m_playerName, score);
+
+		scores.insert(std::lower_bound(scores.begin(), scores.end(), myScore), myScore);
+		writeToLeaderBoard(scores);
+	}
+
+	void Game::updatePlayerName() {
+		std::vector<Score> scores;
 		std::stringstream name;
 
 		getFromLeaderBoard(scores);
-		
-		name << "Player " << scores.size();
-		Score myScore(name.str(), score);
 
-		//If scores are smae, the new will be placed beneath the first
-		scores.insert(std::lower_bound(scores.begin(), scores.end(), myScore), myScore);
-		writeToLeaderBoard(scores);
+		name << "Player " << scores.size();
+		m_playerName = name.str();
 	}
 
 	void Game::getFromLeaderBoard(std::vector<Score>& scores) {
@@ -379,7 +358,6 @@ namespace snake {
 				std::string tempName = line.substr(0, splitter);
 				unsigned tempScore = std::stoi(line.substr(splitter + 1));
 
-				//scores.emplace_back(tempName, tempScore);
 				scores.emplace(scores.begin(), tempName, tempScore);
 			}
 
@@ -396,7 +374,6 @@ namespace snake {
 		leaderBoard.open("TextFiles/Leaderboard.txt");
 		if (leaderBoard.is_open()) {
 
-			//for (auto it = scores.end(); it >= scores.begin(); --it) {
 			for (int i = scores.size() - 1; i >= 0; i--) {
 				leaderBoard << scores[i].getName() << ';' << scores[i].getScore() << '\n';
 			}
@@ -408,30 +385,11 @@ namespace snake {
 	}
 
 	void Game::waitForInput() {
-		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		while (!(
 			m_inputManager.keyDown(SDL_SCANCODE_RETURN) ||
 			m_inputManager.keyDown(SDL_SCANCODE_ESCAPE))) {
-			//Her er det dumt å ha med musetast, da den leser musetasten nede når den entrer funksjonen Leaderboard
 
 			m_inputManager.update();
 		}
-	}
-
-	void Game::userTextInput() {
-		//WE MIGHT ADD THIS BUT PERHAPS WE TAKE IT AWAY IF BECOMES TOO COMPLICATED
-		SDL_StartTextInput();
-		while (1) {
-			m_inputManager.update();
-
-			if (m_inputManager.keyDown(SDL_SCANCODE_ESCAPE)) {
-				break;
-			}
-
-			if (m_inputManager.keyDown(SDL_TEXTINPUT)) {
-				std::cout << "TEXTINPUT" << std::endl;
-			}
-		}
-		SDL_StopTextInput();
 	}
 }

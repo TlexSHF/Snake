@@ -82,19 +82,20 @@ namespace snake {
 		void eatSpecial();
 	};
 
+	/* ------------- PUBLIC ------------- */
 	template<size_t size>
 	inline Matrix<size>::Matrix() :
 		m_matrix(),
-		m_snake(4, 4, size), //THESE CAN NOT BE HARDCODED
+		m_snake(4, 4, size),
 		m_fruit(0, 0),
 		m_specialFruit(0, 0) {
 
-		srand(time(NULL)); //init psuedo random number
+		//init psuedo random number
+		srand(time(NULL));
 
 		emptyBoard();
 		createWalls();
 
-		newRdmCoords(m_snake.getLimbs()[0]); //TODO This doesn't do much it seems.
 		newRdmCoords(m_fruit);
 		setCellType(m_fruit, 'f');
 
@@ -113,6 +114,7 @@ namespace snake {
 
 	template<size_t size>
 	inline unsigned Matrix<size>::getSpecialFruits() {
+		std::cout << "SP: " << m_specialFruits << std::endl;
 		return m_specialFruits;
 	}
 
@@ -151,7 +153,7 @@ namespace snake {
 		updateTempWalls();
 		updateSnake();
 		spawnSpecialFruit();
-		updateWalls(); //TODO: find a way to not call this each time
+		updateWalls();
 	}
 
 	template<size_t size>
@@ -190,6 +192,7 @@ namespace snake {
 		m_specialFruits--;
 	}
 
+	/* ------------- PRIVATE ------------- */
 	template<size_t size>
 	void Matrix<size>::createWalls() {
 		//Gathering coords of each direction 

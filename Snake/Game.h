@@ -33,38 +33,34 @@ namespace snake {
 		std::chrono::high_resolution_clock m_time;
 		size_t m_windowSize;
 
+		std::string m_playerName;
 		bool m_running = true;
 		double m_speed = 0;
 
-		//std::mutex m_graphicsLock; //Not sure if we needs these
-		//std::condition_variable m_graphicsCV;
-
-		void countDown();
+		void loadingScreen();
 		void startGame();
 		void gameOver();
 		
 		void recieveUserInput(Direction& newDir);
 		void moveSnake(Direction& direction);
-		void renderGraphics();
 
 		void renderGameMargin();
 		void clearStats();
 		void updateGraphics();
-		void fillTextureBank();
 
 		std::string getImageFromType(char type);
 
 		unsigned extractDigit(unsigned number, unsigned exponent);
-		bool mouseInsideArea(SDL_Rect rectangle); //TODO MOVED THIS DOWN ^
+		bool mouseInsideArea(SDL_Rect rectangle);
 
 		void leaderBoard();
 		void addNewScore(unsigned score);
+		void updatePlayerName();
 
 		void getFromLeaderBoard(std::vector<Score>& scores);
 		void writeToLeaderBoard(const std::vector<Score>& scores);
 
 		void waitForInput();
-		void userTextInput();
 	};
 }
 

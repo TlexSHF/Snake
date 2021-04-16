@@ -31,7 +31,6 @@ namespace snake {
 
 	void GraphicsManager::renderGraphics() {
 		SDL_RenderPresent(m_renderer);
-		//SDL_RenderClear(m_renderer);
 	}
 
 	void GraphicsManager::clearScreen() {

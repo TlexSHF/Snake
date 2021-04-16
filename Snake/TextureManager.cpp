@@ -2,7 +2,7 @@
 
 namespace snake {
 	
-	/* Public */
+	/* PUBLIC */
 	SDL_Texture* TextureManager::getTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window) {
 		if (m_textures.count(image) > 0) {
 			return m_textures[image];
@@ -23,7 +23,7 @@ namespace snake {
 		}
 	}
 
-	/* Private */
+	/* PRIVATE */
 	std::string TextureManager::makeKey(std::string text, size_t size) {
 		std::stringstream key;
 		key << text << ':' << size;
@@ -67,7 +67,6 @@ namespace snake {
 			SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 			SDL_FreeSurface(surface);
 
-			//m_texts.emplace_back(text, size, texture);
 			m_textures.insert({ key, texture });
 		}
 	}
