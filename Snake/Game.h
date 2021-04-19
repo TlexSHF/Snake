@@ -5,11 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include <thread>
-#include <mutex>
-#include <condition_variable>
 #include <chrono>
 #include <string>
-#include <algorithm>
 #include <vector>
 #include "InputManager.h"
 #include "Matrix.h"

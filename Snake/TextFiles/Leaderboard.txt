@@ -1,5 +1,0 @@
-Player 1;21
-Player 3;12
-Player 0;10
-Player 2;7
-Player 4;1
