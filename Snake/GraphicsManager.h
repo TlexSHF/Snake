@@ -11,7 +11,7 @@
 #include <vector>
 #include "TextureManager.h"
 
-namespace snake {
+namespace managers {
 
 	class GraphicsManager {
 	public:
@@ -29,7 +29,7 @@ namespace snake {
 	private:
 		SDL_Window* m_window = nullptr;
 		SDL_Renderer* m_renderer = nullptr;
-		TextureManager m_textureManager;
+		managers::TextureManager m_textureManager;
 
 		std::string m_windowName;
 		size_t m_windowWidth;

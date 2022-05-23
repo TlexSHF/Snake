@@ -1,0 +1,54 @@
+﻿  Game.cpp
+c:\users\simone\source\repos\snake\snake\matrix.h(94): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\simone\source\repos\snake\snake\game.cpp(242): warning C4018: '<': signed/unsigned mismatch
+c:\users\simone\source\repos\snake\snake\game.cpp(313): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\simone\source\repos\snake\snake\game.cpp(377): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\simone\source\repos\snake\snake\matrix.h(240): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  c:\users\simone\source\repos\snake\snake\matrix.h(232): note: while compiling class template member function 'void snake::Matrix<10>::newRdmCoords(snake::Coords &)'
+  c:\users\simone\source\repos\snake\snake\matrix.h(99): note: see reference to function template instantiation 'void snake::Matrix<10>::newRdmCoords(snake::Coords &)' being compiled
+  c:\users\simone\source\repos\snake\snake\matrix.h(87): note: while compiling class template member function 'snake::Matrix<10>::Matrix(void)'
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\memory(2539): note: see reference to function template instantiation 'snake::Matrix<10>::Matrix(void)' being compiled
+c:\users\simone\source\repos\snake\snake\matrix.h(241): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\simone\source\repos\snake\snake\matrix.h(300): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+  c:\users\simone\source\repos\snake\snake\matrix.h(298): note: while compiling class template member function 'void snake::Matrix<10>::updateSnake(void)'
+  c:\users\simone\source\repos\snake\snake\matrix.h(154): note: see reference to function template instantiation 'void snake::Matrix<10>::updateSnake(void)' being compiled
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\xmemory0(879): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vector(900): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,size_t&,int&>(_Alloc &,_Objty *const ,size_t &,int &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<snake::Coords>,
+              _Ty=snake::Coords,
+              _Objty=snake::Coords
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vector(902): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,size_t&,int&>(_Alloc &,_Objty *const ,size_t &,int &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<snake::Coords>,
+              _Ty=snake::Coords,
+              _Objty=snake::Coords
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vector(916): note: see reference to function template instantiation 'void std::vector<snake::Coords,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<size_t&,int&>(size_t &,int &)' being compiled
+          with
+          [
+              _Ty=snake::Coords
+          ]
+  c:\users\simone\source\repos\snake\snake\matrix.h(203): note: see reference to function template instantiation 'void std::vector<snake::Coords,std::allocator<_Ty>>::emplace_back<size_t&,int&>(size_t &,int &)' being compiled
+          with
+          [
+              _Ty=snake::Coords
+          ]
+  c:\users\simone\source\repos\snake\snake\matrix.h(197): note: while compiling class template member function 'void snake::Matrix<10>::createWalls(void)'
+  c:\users\simone\source\repos\snake\snake\matrix.h(97): note: see reference to function template instantiation 'void snake::Matrix<10>::createWalls(void)' being compiled
+  GraphicsManager.cpp
+c:\users\simone\source\repos\snake\snake\graphicsmanager.cpp(16): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+c:\users\simone\source\repos\snake\snake\graphicsmanager.cpp(47): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\simone\source\repos\snake\snake\graphicsmanager.cpp(48): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\simone\source\repos\snake\snake\graphicsmanager.cpp(77): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\simone\source\repos\snake\snake\graphicsmanager.cpp(78): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\simone\source\repos\snake\snake\graphicsmanager.cpp(96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  main.cpp
+c:\users\simone\source\repos\snake\snake\matrix.h(94): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  TextureManager.cpp
+c:\users\simone\source\repos\snake\snake\texturemanager.cpp(54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  Snake.vcxproj -> C:\Users\simone\source\repos\Snake\x64\Debug\Snake.exe

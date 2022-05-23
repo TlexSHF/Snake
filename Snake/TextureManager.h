@@ -8,7 +8,7 @@
 #include <iostream>
 #include <map>
 
-namespace snake {
+namespace managers {
 
 	class TextureManager {
 	public:

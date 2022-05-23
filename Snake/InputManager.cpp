@@ -1,7 +1,7 @@
 #include <iostream>
 #include "InputManager.h"
 
-namespace snake {
+namespace managers {
 
 	/* ------------- PUBLIC ------------- */
 	InputManager& InputManager::getInstance() {

@@ -23,9 +23,9 @@ namespace snake {
 		Game(size_t windowSize);
 		void menu();
 	private:
-		InputManager& m_inputManager;
+		managers::InputManager& m_inputManager;
 		std::unique_ptr<Matrix<matrixSize>> m_matrix;
-		GraphicsManager m_graphics;
+		managers::GraphicsManager m_graphics;
 
 		std::chrono::high_resolution_clock m_time;
 		size_t m_windowSize;

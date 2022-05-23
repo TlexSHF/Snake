@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-namespace snake {
+namespace managers {
 
 	class InputManager {
 	public:

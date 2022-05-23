@@ -1,6 +1,6 @@
 #include "TextureManager.h"
 
-namespace snake {
+namespace managers {
 	
 	/* PUBLIC */
 	SDL_Texture* TextureManager::getTexture(std::string image, SDL_Renderer* renderer, SDL_Window* window) {

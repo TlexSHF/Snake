@@ -1,0 +1,8 @@
+Player 2;19
+Player 7;13
+Player 1;6
+Player 4;6
+Player 5;5
+Player 6;5
+Player 0;3
+Player 3;2

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "GraphicsManager.h"
 
-namespace snake {
+namespace managers {
 
 	/* ------------- PUBLIC ------------- */
 	GraphicsManager::GraphicsManager(std::string name, size_t size, size_t margin) :
