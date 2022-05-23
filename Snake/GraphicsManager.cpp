@@ -29,12 +29,12 @@ namespace managers {
 		SDL_Quit();
 	}
 
-	void GraphicsManager::renderGraphics() {
-		SDL_RenderPresent(m_renderer);
-	}
-
 	void GraphicsManager::clearScreen() {
 		SDL_RenderClear(m_renderer);
+	}
+
+	void GraphicsManager::renderGraphics() {
+		SDL_RenderPresent(m_renderer);
 	}
 
 	void GraphicsManager::drawTexture(std::string image, unsigned x, unsigned y, size_t gridSize) {
